@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "org.wit.placemark"
+    namespace = "org.wit.habit"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -11,7 +11,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "org.wit.placemark"
+        applicationId = "org.wit.habit"
         minSdk = 30
         targetSdk = 36
         versionCode = 1

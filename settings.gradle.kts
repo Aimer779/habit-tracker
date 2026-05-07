@@ -22,5 +22,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Placemark"
+rootProject.name = "Habit"
 include(":app")
