@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import org.json.JSONArray
 import org.json.JSONObject
 import org.wit.habit.model.Habit
+import timber.log.Timber
 
 class HabitStore(private val context: Context) {
     private val prefs: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -15,13 +16,19 @@ class HabitStore(private val context: Context) {
     }
 
     fun findAll(): List<Habit> {
-        val json = prefs.getString(KEY_HABITS, "[]") ?: "[]"
-        val habits = mutableListOf<Habit>()
-        val array = JSONArray(json)
-        for (i in 0 until array.length()) {
-            habits.add(parseHabit(array.getJSONObject(i)))
+        return try {
+            val json = prefs.getString(KEY_HABITS, "[]") ?: "[]"
+            if (json.isBlank()) return emptyList()
+            val habits = mutableListOf<Habit>()
+            val array = JSONArray(json)
+            for (i in 0 until array.length()) {
+                habits.add(parseHabit(array.getJSONObject(i)))
+            }
+            habits
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to load habits, returning empty list")
+            emptyList()
         }
-        return habits
     }
 
     fun findById(id: Long): Habit? {
@@ -55,9 +62,13 @@ class HabitStore(private val context: Context) {
     }
 
     private fun save(habits: List<Habit>) {
-        val array = JSONArray()
-        habits.forEach { array.put(toJson(it)) }
-        prefs.edit().putString(KEY_HABITS, array.toString()).apply()
+        try {
+            val array = JSONArray()
+            habits.forEach { array.put(toJson(it)) }
+            prefs.edit().putString(KEY_HABITS, array.toString()).apply()
+        } catch (e: Exception) {
+            Timber.e(e, "Failed to save habits")
+        }
     }
 
     private fun toJson(habit: Habit): JSONObject {
@@ -74,15 +85,17 @@ class HabitStore(private val context: Context) {
 
     private fun parseHabit(obj: JSONObject): Habit {
         val dates = mutableSetOf<String>()
-        val arr = obj.getJSONArray("checkInDates")
-        for (i in 0 until arr.length()) {
-            dates.add(arr.getString(i))
+        val arr = obj.optJSONArray("checkInDates")
+        if (arr != null) {
+            for (i in 0 until arr.length()) {
+                dates.add(arr.getString(i))
+            }
         }
         return Habit(
-            id = obj.getLong("id"),
-            title = obj.getString("title"),
-            description = obj.getString("description"),
-            createdTime = obj.getLong("createdTime"),
+            id = obj.optLong("id", System.currentTimeMillis()),
+            title = obj.optString("title", ""),
+            description = obj.optString("description", ""),
+            createdTime = obj.optLong("createdTime", System.currentTimeMillis()),
             checkInDates = dates
         )
     }

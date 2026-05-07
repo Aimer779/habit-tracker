@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import org.wit.habit.helpers.HabitStore
 import org.wit.habit.model.Habit
-import timber.log.Timber
 import timber.log.Timber.i
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,7 +21,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Timber.plant(Timber.DebugTree())
         i("Habit Tracker started..")
 
         habitStore = HabitStore(this)
