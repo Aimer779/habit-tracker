@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/filter_all"
+        android:title="@string/all" />
+    <item
+        android:id="@+id/filter_checked_in"
+        android:title="@string/checked_in" />
+    <item
+        android:id="@+id/filter_not_checked_in"
+        android:title="@string/not_checked_in" />
+</menu>

@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">习惯打卡</string>
+    <string name="habit_tracker">Habit Tracker</string>
+    <string name="home">主页</string>
+    <string name="stats">统计</string>
+    <string name="settings">设置</string>
+    <string name="all">全部</string>
+    <string name="checked_in">已打卡</string>
+    <string name="not_checked_in">未打卡</string>
 </resources>
