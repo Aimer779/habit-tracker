@@ -6,7 +6,6 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -17,7 +16,7 @@ import org.wit.habit.helpers.HabitStore
 import org.wit.habit.model.Habit
 import timber.log.Timber
 
-class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitClickListener {
+class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
 
     private lateinit var habitStore: HabitStore
     private lateinit var recyclerView: RecyclerView

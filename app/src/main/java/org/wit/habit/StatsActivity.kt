@@ -3,11 +3,10 @@ package org.wit.habit
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import org.wit.habit.helpers.DateUtils
 import org.wit.habit.helpers.HabitStore
 
-class StatsActivity : AppCompatActivity() {
+class StatsActivity : BaseActivity() {
     private lateinit var habitStore: HabitStore
 
     override fun onCreate(savedInstanceState: Bundle?) {

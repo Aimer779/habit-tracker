@@ -6,13 +6,12 @@ import android.widget.EditText
 import android.widget.TextView
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import org.wit.habit.helpers.HabitColors
 import org.wit.habit.helpers.HabitStore
 import org.wit.habit.model.Habit
 
-class AddHabitActivity : AppCompatActivity() {
+class AddHabitActivity : BaseActivity() {
     private lateinit var habitStore: HabitStore
     private lateinit var editName: EditText
     private lateinit var editDescription: EditText

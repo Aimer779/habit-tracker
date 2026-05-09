@@ -3,10 +3,27 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- App Theme Primary Colors -->
+    <color name="mint_primary">#26A69A</color>
+    <color name="mint_primary_container">#B2DFDB</color>
+    <color name="blue_primary">#42A5F5</color>
+    <color name="blue_primary_container">#BBDEFB</color>
+    <color name="red_primary">#EF5350</color>
+    <color name="red_primary_container">#FFCDD2</color>
+    <color name="green_primary">#66BB6A</color>
+    <color name="green_primary_container">#C8E6C9</color>
+    <color name="purple_primary">#AB47BC</color>
+    <color name="purple_primary_container">#E1BEE7</color>
+    <color name="yellow_primary">#FFCA28</color>
+    <color name="yellow_primary_container">#FFECB3</color>
+
+    <!-- Habit Card Colors -->
     <color name="habit_blue">#90CAF9</color>
     <color name="habit_orange">#FFCC80</color>
     <color name="habit_green">#A5D6A7</color>
     <color name="habit_pink">#F48FB1</color>
     <color name="habit_purple">#CE93D8</color>
     <color name="habit_teal">#80CBC4</color>
+    <color name="habit_yellow">#FFF59D</color>
+    <color name="habit_red">#EF9A9A</color>
 </resources>

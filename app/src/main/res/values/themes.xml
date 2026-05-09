@@ -1,11 +1,75 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
     <style name="Base.Theme.Habit" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Minimal base to allow DayNight automatic switching -->
     </style>
 
     <style name="Theme.Habit" parent="Base.Theme.Habit" />
+
+    <style name="Theme.Habit.Mint" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/mint_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/mint_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/mint_primary</item>
+        <item name="colorSecondary">@color/mint_primary</item>
+        <item name="android:statusBarColor">@color/mint_primary</item>
+        <item name="android:navigationBarColor">@color/mint_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.Habit.Blue" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/blue_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/blue_primary</item>
+        <item name="colorSecondary">@color/blue_primary</item>
+        <item name="android:statusBarColor">@color/blue_primary</item>
+        <item name="android:navigationBarColor">@color/blue_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.Habit.Red" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/red_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/red_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/red_primary</item>
+        <item name="colorSecondary">@color/red_primary</item>
+        <item name="android:statusBarColor">@color/red_primary</item>
+        <item name="android:navigationBarColor">@color/red_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.Habit.Green" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/green_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/green_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/green_primary</item>
+        <item name="colorSecondary">@color/green_primary</item>
+        <item name="android:statusBarColor">@color/green_primary</item>
+        <item name="android:navigationBarColor">@color/green_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.Habit.Purple" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/purple_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/purple_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/purple_primary</item>
+        <item name="colorSecondary">@color/purple_primary</item>
+        <item name="android:statusBarColor">@color/purple_primary</item>
+        <item name="android:navigationBarColor">@color/purple_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <style name="Theme.Habit.Yellow" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/yellow_primary</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimaryContainer">@color/yellow_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/black</item>
+        <item name="colorSecondary">@color/yellow_primary</item>
+        <item name="android:statusBarColor">@color/yellow_primary</item>
+        <item name="android:navigationBarColor">@color/yellow_primary</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
 
     <style name="ShapeAppearance.BottomBar" parent="">
         <item name="cornerFamily">rounded</item>
