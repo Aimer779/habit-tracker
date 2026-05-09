@@ -18,6 +18,7 @@ class HabitAdapter(
     interface OnHabitClickListener {
         fun onCheckInClick(habit: Habit)
         fun onCancelCheckInClick(habit: Habit)
+        fun onEditClick(habit: Habit)
         fun onDeleteClick(habit: Habit)
     }
 
@@ -27,6 +28,7 @@ class HabitAdapter(
         private val tvDescription: TextView = itemView.findViewById(R.id.tvDescription)
         private val tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
         private val btnCheckIn: Button = itemView.findViewById(R.id.btnCheckIn)
+        private val btnEdit: Button = itemView.findViewById(R.id.btnEdit)
         private val btnDelete: Button = itemView.findViewById(R.id.btnDelete)
 
         fun bind(habit: Habit) {
@@ -50,6 +52,10 @@ class HabitAdapter(
                 btnCheckIn.setOnClickListener {
                     listener.onCheckInClick(habit)
                 }
+            }
+
+            btnEdit.setOnClickListener {
+                listener.onEditClick(habit)
             }
 
             btnDelete.setOnClickListener {

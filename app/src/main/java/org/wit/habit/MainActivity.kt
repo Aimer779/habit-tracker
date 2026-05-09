@@ -73,6 +73,12 @@ class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitClickListener {
         refreshList()
     }
 
+    override fun onEditClick(habit: Habit) {
+        val intent = Intent(this, AddHabitActivity::class.java)
+        intent.putExtra("habit_id", habit.id)
+        startActivity(intent)
+    }
+
     override fun onDeleteClick(habit: Habit) {
         habitStore.delete(habit)
         refreshList()
