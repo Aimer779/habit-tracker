@@ -151,7 +151,7 @@ class HabitAdapter(
         val isCompleted = count >= habit.targetCount
 
         if (isCompleted) {
-            button.text = "Undo Check-in"
+            button.text = "Uncheck"
             button.backgroundTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#F44336"))
             button.setOnClickListener {
                 listener.onCancelCheckInClick(habit)
