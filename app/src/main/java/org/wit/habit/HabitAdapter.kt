@@ -1,12 +1,15 @@
 package org.wit.habit
 
+import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.GridLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import org.wit.habit.helpers.DateUtils
 import org.wit.habit.helpers.HabitColors
@@ -28,45 +31,68 @@ class HabitAdapter(
         private val cardView: MaterialCardView = itemView.findViewById(R.id.cardView)
         private val tvIcon: TextView = itemView.findViewById(R.id.tvIcon)
         private val tvName: TextView = itemView.findViewById(R.id.tvName)
-        private val tvDescription: TextView = itemView.findViewById(R.id.tvDescription)
-        private val tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
-        private val btnCheckIn: Button = itemView.findViewById(R.id.btnCheckIn)
-        private val btnEdit: Button = itemView.findViewById(R.id.btnEdit)
-        private val btnDelete: Button = itemView.findViewById(R.id.btnDelete)
+        private val heatmapGrid: GridLayout = itemView.findViewById(R.id.heatmapGrid)
+        private val btnCheckIn: MaterialButton = itemView.findViewById(R.id.btnCheckIn)
 
         fun bind(habit: Habit) {
             tvIcon.text = habit.icon
             tvName.text = habit.name
-            tvDescription.text = habit.description.ifEmpty { "暂无描述" }
 
-            val cardColor = ContextCompat.getColor(itemView.context, HabitColors.getColorRes(habit.color))
-            cardView.setCardBackgroundColor(cardColor)
+            val themeColor = ContextCompat.getColor(itemView.context, HabitColors.getColorRes(habit.color))
+            cardView.setCardBackgroundColor(android.graphics.Color.WHITE)
+
+            heatmapGrid.removeAllViews()
+            for (i in 34 downTo 0) {
+                val dateStr = DateUtils.daysAgo(i)
+                val isChecked = habit.checkInDates.contains(dateStr)
+
+                val dotColor = if (isChecked) {
+                    themeColor
+                } else {
+                    android.graphics.Color.parseColor("#BDBDBD")
+                }
+
+                val dot = View(itemView.context)
+                val drawable = GradientDrawable()
+                drawable.shape = GradientDrawable.OVAL
+                drawable.setColor(dotColor)
+                dot.background = drawable
+
+                val size = dpToPx(8, itemView.context)
+                val margin = dpToPx(2, itemView.context)
+                val params = GridLayout.LayoutParams()
+                params.width = size
+                params.height = size
+                params.setMargins(margin, margin, margin, margin)
+                dot.layoutParams = params
+
+                heatmapGrid.addView(dot)
+            }
 
             val today = DateUtils.today()
             val isCheckedInToday = habit.checkInDates.contains(today)
 
             if (isCheckedInToday) {
-                tvStatus.text = "今日已打卡"
-                tvStatus.setTextColor(itemView.context.getColor(android.R.color.holo_green_dark))
-                btnCheckIn.text = "取消打卡"
+                btnCheckIn.text = "撤销打卡"
+                btnCheckIn.backgroundTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#F44336"))
                 btnCheckIn.setOnClickListener {
                     listener.onCancelCheckInClick(habit)
                 }
             } else {
-                tvStatus.text = "今日未打卡"
-                tvStatus.setTextColor(itemView.context.getColor(android.R.color.darker_gray))
                 btnCheckIn.text = "打卡"
+                btnCheckIn.backgroundTintList = android.content.res.ColorStateList.valueOf(themeColor)
                 btnCheckIn.setOnClickListener {
                     listener.onCheckInClick(habit)
                 }
             }
 
-            btnEdit.setOnClickListener {
+            cardView.setOnClickListener {
                 listener.onEditClick(habit)
             }
 
-            btnDelete.setOnClickListener {
+            cardView.setOnLongClickListener {
                 listener.onDeleteClick(habit)
+                true
             }
         }
     }
@@ -85,5 +111,9 @@ class HabitAdapter(
     fun updateData(newHabits: List<Habit>) {
         habits = newHabits
         notifyDataSetChanged()
+    }
+
+    private fun dpToPx(dp: Int, context: Context): Int {
+        return (dp * context.resources.displayMetrics.density).toInt()
     }
 }

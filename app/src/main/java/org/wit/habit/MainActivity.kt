@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wit.habit.helpers.DateUtils
 import org.wit.habit.helpers.HabitStore
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitClickListener {
         tvEmpty = findViewById(R.id.tvEmpty)
 
         habitAdapter = HabitAdapter(emptyList(), this)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = habitAdapter
 
         findViewById<Button>(R.id.btnAddHabit).setOnClickListener {
