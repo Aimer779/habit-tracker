@@ -24,16 +24,16 @@
 
         <TextView
             android:id="@+id/tvName"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end"
-            android:layout_marginStart="4dp"
+            android:gravity="center"
             app:layout_constraintTop_toTopOf="@id/tvIcon"
             app:layout_constraintBottom_toBottomOf="@id/tvIcon"
-            app:layout_constraintStart_toEndOf="@id/tvIcon"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
         <GridLayout
