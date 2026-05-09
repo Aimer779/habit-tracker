@@ -1,9 +1,11 @@
 package org.wit.habit.model
 
+import org.wit.habit.helpers.DateUtils
+
 data class Habit(
     var id: Long = System.currentTimeMillis(),
-    var title: String = "",
+    var name: String = "",
     var description: String = "",
-    var createdTime: Long = System.currentTimeMillis(),
+    var createdDate: String = DateUtils.today(),
     var checkInDates: MutableSet<String> = mutableSetOf()
 )

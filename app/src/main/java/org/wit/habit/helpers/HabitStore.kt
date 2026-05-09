@@ -61,6 +61,11 @@ class HabitStore(private val context: Context) {
         update(habit)
     }
 
+    fun cancelCheckIn(habit: Habit, date: String) {
+        habit.checkInDates.remove(date)
+        update(habit)
+    }
+
     private fun save(habits: List<Habit>) {
         try {
             val array = JSONArray()
@@ -74,9 +79,9 @@ class HabitStore(private val context: Context) {
     private fun toJson(habit: Habit): JSONObject {
         val obj = JSONObject()
         obj.put("id", habit.id)
-        obj.put("title", habit.title)
+        obj.put("name", habit.name)
         obj.put("description", habit.description)
-        obj.put("createdTime", habit.createdTime)
+        obj.put("createdDate", habit.createdDate)
         val dates = JSONArray()
         habit.checkInDates.forEach { dates.put(it) }
         obj.put("checkInDates", dates)
@@ -93,9 +98,9 @@ class HabitStore(private val context: Context) {
         }
         return Habit(
             id = obj.optLong("id", System.currentTimeMillis()),
-            title = obj.optString("title", ""),
+            name = obj.optString("name", ""),
             description = obj.optString("description", ""),
-            createdTime = obj.optLong("createdTime", System.currentTimeMillis()),
+            createdDate = obj.optString("createdDate", DateUtils.today()),
             checkInDates = dates
         )
     }
