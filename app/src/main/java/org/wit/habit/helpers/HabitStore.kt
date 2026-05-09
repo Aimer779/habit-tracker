@@ -82,6 +82,8 @@ class HabitStore(private val context: Context) {
         obj.put("name", habit.name)
         obj.put("description", habit.description)
         obj.put("createdDate", habit.createdDate)
+        obj.put("icon", habit.icon)
+        obj.put("color", habit.color)
         val dates = JSONArray()
         habit.checkInDates.forEach { dates.put(it) }
         obj.put("checkInDates", dates)
@@ -101,7 +103,9 @@ class HabitStore(private val context: Context) {
             name = obj.optString("name", ""),
             description = obj.optString("description", ""),
             createdDate = obj.optString("createdDate", DateUtils.today()),
-            checkInDates = dates
+            checkInDates = dates,
+            icon = obj.optString("icon", "✅"),
+            color = obj.optString("color", "blue")
         )
     }
 }

@@ -5,9 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import org.wit.habit.helpers.DateUtils
+import org.wit.habit.helpers.HabitColors
 import org.wit.habit.model.Habit
 
 class HabitAdapter(
@@ -24,6 +26,7 @@ class HabitAdapter(
 
     inner class HabitViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val cardView: MaterialCardView = itemView.findViewById(R.id.cardView)
+        private val tvIcon: TextView = itemView.findViewById(R.id.tvIcon)
         private val tvName: TextView = itemView.findViewById(R.id.tvName)
         private val tvDescription: TextView = itemView.findViewById(R.id.tvDescription)
         private val tvStatus: TextView = itemView.findViewById(R.id.tvStatus)
@@ -32,8 +35,12 @@ class HabitAdapter(
         private val btnDelete: Button = itemView.findViewById(R.id.btnDelete)
 
         fun bind(habit: Habit) {
+            tvIcon.text = habit.icon
             tvName.text = habit.name
             tvDescription.text = habit.description.ifEmpty { "暂无描述" }
+
+            val cardColor = ContextCompat.getColor(itemView.context, HabitColors.getColorRes(habit.color))
+            cardView.setCardBackgroundColor(cardColor)
 
             val today = DateUtils.today()
             val isCheckedInToday = habit.checkInDates.contains(today)

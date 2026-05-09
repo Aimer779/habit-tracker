@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="habit_blue">#90CAF9</color>
+    <color name="habit_orange">#FFCC80</color>
+    <color name="habit_green">#A5D6A7</color>
+    <color name="habit_pink">#F48FB1</color>
+    <color name="habit_purple">#CE93D8</color>
+    <color name="habit_teal">#80CBC4</color>
 </resources>
