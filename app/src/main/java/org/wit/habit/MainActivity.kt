@@ -27,6 +27,7 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
 
     private var currentFilter = Filter.ALL
     private var isAscending = true
+    private var currentViewMode = HabitAdapter.ViewMode.MONTH
 
     enum class Filter { ALL, CHECKED_IN, NOT_CHECKED_IN }
 
@@ -43,7 +44,7 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
         btnFilter = findViewById(R.id.btnFilter)
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
 
-        habitAdapter = HabitAdapter(emptyList(), this)
+        habitAdapter = HabitAdapter(emptyList(), currentViewMode, this)
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = habitAdapter
 
@@ -52,7 +53,12 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
         }
 
         findViewById<ImageButton>(R.id.btnCalendar).setOnClickListener {
-            // 暂无日历功能
+            currentViewMode = when (currentViewMode) {
+                HabitAdapter.ViewMode.MONTH -> HabitAdapter.ViewMode.WEEK
+                HabitAdapter.ViewMode.WEEK -> HabitAdapter.ViewMode.DAY
+                HabitAdapter.ViewMode.DAY -> HabitAdapter.ViewMode.MONTH
+            }
+            refreshList()
         }
 
         btnFilter.setOnClickListener {
@@ -119,8 +125,8 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
 
         val filtered = when (currentFilter) {
             Filter.ALL -> habits
-            Filter.CHECKED_IN -> habits.filter { it.checkInDates.contains(today) }
-            Filter.NOT_CHECKED_IN -> habits.filter { !it.checkInDates.contains(today) }
+            Filter.CHECKED_IN -> habits.filter { (it.checkInCounts[today] ?: 0) >= it.targetCount }
+            Filter.NOT_CHECKED_IN -> habits.filter { (it.checkInCounts[today] ?: 0) < it.targetCount }
         }
 
         val sorted = if (isAscending) {
@@ -135,7 +141,14 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
         } else {
             tvEmpty.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
-            habitAdapter.updateData(sorted)
+            recyclerView.layoutManager = when (currentViewMode) {
+                HabitAdapter.ViewMode.MONTH -> GridLayoutManager(this, 2)
+                HabitAdapter.ViewMode.WEEK -> androidx.recyclerview.widget.LinearLayoutManager(this)
+                HabitAdapter.ViewMode.DAY -> androidx.recyclerview.widget.LinearLayoutManager(this)
+            }
+            val newAdapter = HabitAdapter(sorted, currentViewMode, this)
+            recyclerView.adapter = newAdapter
+            habitAdapter = newAdapter
         }
     }
 

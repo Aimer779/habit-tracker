@@ -57,7 +57,8 @@ class HabitStore(private val context: Context) {
     }
 
     fun checkIn(habit: Habit, date: String) {
-        habit.checkInDates.add(date)
+        val current = habit.checkInCounts[date] ?: 0
+        habit.checkInCounts[date] = current + 1
         update(habit)
     }
 
@@ -66,7 +67,12 @@ class HabitStore(private val context: Context) {
     }
 
     fun cancelCheckIn(habit: Habit, date: String) {
-        habit.checkInDates.remove(date)
+        val current = habit.checkInCounts[date] ?: 0
+        if (current <= 1) {
+            habit.checkInCounts.remove(date)
+        } else {
+            habit.checkInCounts[date] = current - 1
+        }
         update(habit)
     }
 
@@ -88,18 +94,27 @@ class HabitStore(private val context: Context) {
         obj.put("createdDate", habit.createdDate)
         obj.put("icon", habit.icon)
         obj.put("color", habit.color)
-        val dates = JSONArray()
-        habit.checkInDates.forEach { dates.put(it) }
-        obj.put("checkInDates", dates)
+        val counts = JSONObject()
+        habit.checkInCounts.forEach { (date, count) -> counts.put(date, count) }
+        obj.put("checkInCounts", counts)
         return obj
     }
 
     private fun parseHabit(obj: JSONObject): Habit {
-        val dates = mutableSetOf<String>()
-        val arr = obj.optJSONArray("checkInDates")
-        if (arr != null) {
-            for (i in 0 until arr.length()) {
-                dates.add(arr.getString(i))
+        val counts = mutableMapOf<String, Int>()
+        val countsObj = obj.optJSONObject("checkInCounts")
+        if (countsObj != null) {
+            val keys = countsObj.keys()
+            while (keys.hasNext()) {
+                val key = keys.next()
+                counts[key] = countsObj.getInt(key)
+            }
+        } else {
+            val arr = obj.optJSONArray("checkInDates")
+            if (arr != null) {
+                for (i in 0 until arr.length()) {
+                    counts[arr.getString(i)] = 1
+                }
             }
         }
         return Habit(
@@ -107,7 +122,8 @@ class HabitStore(private val context: Context) {
             name = obj.optString("name", ""),
             description = obj.optString("description", ""),
             createdDate = obj.optString("createdDate", DateUtils.today()),
-            checkInDates = dates,
+            checkInCounts = counts,
+            targetCount = obj.optInt("targetCount", 1),
             icon = obj.optString("icon", "✅"),
             color = obj.optString("color", "blue")
         )

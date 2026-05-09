@@ -7,7 +7,8 @@ data class Habit(
     var name: String = "",
     var description: String = "",
     var createdDate: String = DateUtils.today(),
-    var checkInDates: MutableSet<String> = mutableSetOf(),
+    var checkInCounts: MutableMap<String, Int> = mutableMapOf(),
+    var targetCount: Int = 1,
     var icon: String = "✅",
     var color: String = "blue"
 )

@@ -24,13 +24,13 @@ class StatsActivity : BaseActivity() {
         val today = DateUtils.today()
 
         val totalHabits = habits.size
-        val todayCompleted = habits.count { it.checkInDates.contains(today) }
+        val todayCompleted = habits.count { (it.checkInCounts[today] ?: 0) >= it.targetCount }
         val todayRate = if (totalHabits > 0) {
             "${(todayCompleted * 100 / totalHabits)}%"
         } else {
             "0%"
         }
-        val totalCheckIns = habits.sumOf { it.checkInDates.size }
+        val totalCheckIns = habits.sumOf { it.checkInCounts.values.sum() }
 
         tvTotalHabits.text = "总习惯数：$totalHabits"
         tvTodayCompleted.text = "今日完成：$todayCompleted"
