@@ -58,6 +58,7 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
                 HabitAdapter.ViewMode.WEEK -> HabitAdapter.ViewMode.DAY
                 HabitAdapter.ViewMode.DAY -> HabitAdapter.ViewMode.MONTH
             }
+            Timber.i("User switched view mode to: $currentViewMode")
             refreshList()
         }
 
@@ -67,6 +68,7 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
 
         findViewById<ImageButton>(R.id.btnSort).setOnClickListener {
             isAscending = !isAscending
+            Timber.i("User toggled sort order: ascending=$isAscending")
             refreshList()
         }
 
@@ -98,14 +100,17 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
                 R.id.filter_all -> {
                     currentFilter = Filter.ALL
                     btnFilter.text = getString(R.string.all)
+                    Timber.i("User selected filter: ALL")
                 }
                 R.id.filter_checked_in -> {
                     currentFilter = Filter.CHECKED_IN
                     btnFilter.text = getString(R.string.checked_in)
+                    Timber.i("User selected filter: CHECKED_IN")
                 }
                 R.id.filter_not_checked_in -> {
                     currentFilter = Filter.NOT_CHECKED_IN
                     btnFilter.text = getString(R.string.not_checked_in)
+                    Timber.i("User selected filter: NOT_CHECKED_IN")
                 }
             }
             refreshList()
@@ -155,12 +160,14 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
     override fun onCheckInClick(habit: Habit) {
         val today = DateUtils.today()
         habitStore.checkIn(habit, today)
+        Timber.i("User checked in habit: ${habit.name} on $today")
         refreshList()
     }
 
     override fun onCancelCheckInClick(habit: Habit) {
         val today = DateUtils.today()
         habitStore.cancelCheckIn(habit, today)
+        Timber.i("User cancelled check-in for habit: ${habit.name} on $today")
         refreshList()
     }
 
@@ -172,6 +179,7 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
 
     override fun onDeleteClick(habit: Habit) {
         habitStore.delete(habit)
+        Timber.i("User deleted habit: ${habit.name}")
         refreshList()
     }
 }

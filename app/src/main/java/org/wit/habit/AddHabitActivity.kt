@@ -66,6 +66,7 @@ class AddHabitActivity : BaseActivity() {
                     existingHabit!!.icon = selectedIcon
                     existingHabit!!.color = selectedColor
                     habitStore.update(existingHabit!!)
+                    timber.log.Timber.i("User updated habit: $name")
                 } else {
                     val habit = Habit(
                         name = name,
@@ -74,6 +75,7 @@ class AddHabitActivity : BaseActivity() {
                         color = selectedColor
                     )
                     habitStore.create(habit)
+                    timber.log.Timber.i("User created habit: $name")
                 }
                 finish()
             } else {

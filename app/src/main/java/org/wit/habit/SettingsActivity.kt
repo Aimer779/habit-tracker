@@ -39,6 +39,7 @@ class SettingsActivity : BaseActivity() {
                 .setMessage("Are you sure you want to clear all habit data? This action cannot be undone.")
                 .setPositiveButton("OK") { _, _ ->
                     habitStore.clearAll()
+                    timber.log.Timber.i("User cleared all habit data")
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
@@ -75,6 +76,7 @@ class SettingsActivity : BaseActivity() {
                 val selectedKey = options[which].first
                 if (selectedKey != currentKey) {
                     ThemeStore.setTheme(this, selectedKey)
+                    timber.log.Timber.i("User switched theme to: $selectedKey")
                     updateThemeButtonText(button)
                     recreate()
                 }

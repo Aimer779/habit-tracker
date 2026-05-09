@@ -39,6 +39,7 @@ class HabitStore(private val context: Context) {
         val habits = findAll().toMutableList()
         habits.add(habit)
         save(habits)
+        Timber.i("HabitStore created habit: ${habit.name} (id=${habit.id})")
     }
 
     fun update(habit: Habit) {
@@ -47,6 +48,7 @@ class HabitStore(private val context: Context) {
         if (index != -1) {
             habits[index] = habit
             save(habits)
+            Timber.i("HabitStore updated habit: ${habit.name} (id=${habit.id})")
         }
     }
 
@@ -54,16 +56,19 @@ class HabitStore(private val context: Context) {
         val habits = findAll().toMutableList()
         habits.removeAll { it.id == habit.id }
         save(habits)
+        Timber.i("HabitStore deleted habit: ${habit.name} (id=${habit.id})")
     }
 
     fun checkIn(habit: Habit, date: String) {
         val current = habit.checkInCounts[date] ?: 0
         habit.checkInCounts[date] = current + 1
         update(habit)
+        Timber.i("HabitStore checked in habit: ${habit.name} on $date (count=${current + 1})")
     }
 
     fun clearAll() {
         prefs.edit().remove(KEY_HABITS).apply()
+        Timber.i("HabitStore cleared all data")
     }
 
     fun cancelCheckIn(habit: Habit, date: String) {
@@ -74,6 +79,7 @@ class HabitStore(private val context: Context) {
             habit.checkInCounts[date] = current - 1
         }
         update(habit)
+        Timber.i("HabitStore cancelled check-in for habit: ${habit.name} on $date")
     }
 
     private fun save(habits: List<Habit>) {
