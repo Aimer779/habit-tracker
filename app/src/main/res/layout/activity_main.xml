@@ -11,7 +11,7 @@
         android:layout_marginBottom="80dp"
         android:padding="8dp">
 
-        <!-- 标题栏 -->
+        <!-- Title Bar -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
@@ -33,21 +33,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 筛选栏 -->
+        <!-- Filter Bar -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnFilter"
             style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/habit_green"
+            android:backgroundTint="?attr/colorPrimary"
             android:text="@string/all"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/colorOnPrimary"
             android:textSize="12sp"
             app:cornerRadius="20dp"
             app:icon="@drawable/ic_arrow_drop_down"
             app:iconGravity="end"
-            app:iconTint="@android:color/white"
+            app:iconTint="?attr/colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
 
@@ -61,12 +61,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/btnFilter" />
 
-        <!-- 空状态 -->
+        <!-- Empty State -->
         <TextView
             android:id="@+id/tvEmpty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="暂无习惯，点击下方按钮添加"
+            android:text="No habits yet. Tap the button below to add one."
             android:textSize="16sp"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -74,7 +74,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 习惯网格 -->
+        <!-- Habit Grid -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="0dp"
@@ -105,8 +105,8 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="96dp"
         android:contentDescription="Add Habit"
-        app:backgroundTint="@color/habit_green"
+        app:backgroundTint="?attr/colorPrimary"
         app:srcCompat="@drawable/ic_add"
-        app:tint="@android:color/white" />
+        app:tint="?attr/colorOnPrimary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

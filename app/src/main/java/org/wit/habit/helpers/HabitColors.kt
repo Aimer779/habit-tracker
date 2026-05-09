@@ -16,14 +16,14 @@ object HabitColors {
     }
 
     val colorOptions = listOf(
-        "blue" to "蓝色",
-        "orange" to "橙色",
-        "green" to "绿色",
-        "pink" to "粉色",
-        "purple" to "紫色",
-        "teal" to "青色",
-        "yellow" to "黄色",
-        "red" to "红色"
+        "blue" to "Blue",
+        "orange" to "Orange",
+        "green" to "Green",
+        "pink" to "Pink",
+        "purple" to "Purple",
+        "teal" to "Teal",
+        "yellow" to "Yellow",
+        "red" to "Red"
     )
 
     val iconOptions = listOf(

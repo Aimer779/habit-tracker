@@ -17,12 +17,12 @@ object ThemeStore {
     )
 
     val themeOptions = listOf(
-        "mint" to "薄荷绿",
-        "blue" to "天空蓝",
-        "red" to "活力红",
-        "green" to "自然绿",
-        "purple" to "梦幻紫",
-        "yellow" to "阳光黄",
+        "mint" to "Mint",
+        "blue" to "Sky Blue",
+        "red" to "Vibrant Red",
+        "green" to "Nature Green",
+        "purple" to "Dream Purple",
+        "yellow" to "Sunny Yellow",
     )
 
     fun getThemeRes(context: Context): Int {

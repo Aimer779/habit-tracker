@@ -50,7 +50,7 @@
             android:id="@+id/btnCheckIn"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:text="打卡"
+            android:text="Check In"
             android:textSize="14sp"
             android:textColor="@android:color/white"
             android:layout_marginTop="16dp"

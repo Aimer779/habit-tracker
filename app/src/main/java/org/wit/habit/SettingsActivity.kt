@@ -25,7 +25,7 @@ class SettingsActivity : BaseActivity() {
         val btnBack: Button = findViewById(R.id.btnBack)
 
         tvAppName.text = getString(R.string.app_name)
-        tvVersion.text = "版本：${packageManager.getPackageInfo(packageName, 0).versionName}"
+        tvVersion.text = "Version ${packageManager.getPackageInfo(packageName, 0).versionName}"
 
         updateThemeButtonText(btnTheme)
 
@@ -35,20 +35,20 @@ class SettingsActivity : BaseActivity() {
 
         btnClearData.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("确认清空")
-                .setMessage("确定要清空所有习惯数据吗？此操作不可恢复。")
-                .setPositiveButton("确定") { _, _ ->
+                .setTitle("Confirm Clear")
+                .setMessage("Are you sure you want to clear all habit data? This action cannot be undone.")
+                .setPositiveButton("OK") { _, _ ->
                     habitStore.clearAll()
                 }
-                .setNegativeButton("取消", null)
+                .setNegativeButton("Cancel", null)
                 .show()
         }
 
         btnAbout.setOnClickListener {
             AlertDialog.Builder(this)
-                .setTitle("关于")
-                .setMessage("${getString(R.string.app_name)}\n版本：${packageManager.getPackageInfo(packageName, 0).versionName}")
-                .setPositiveButton("确定", null)
+                .setTitle("About")
+                .setMessage("${getString(R.string.app_name)}\nVersion ${packageManager.getPackageInfo(packageName, 0).versionName}")
+                .setPositiveButton("OK", null)
                 .show()
         }
 
@@ -59,8 +59,8 @@ class SettingsActivity : BaseActivity() {
 
     private fun updateThemeButtonText(button: Button) {
         val currentKey = ThemeStore.getCurrentThemeKey(this)
-        val name = ThemeStore.themeOptions.find { it.first == currentKey }?.second ?: "薄荷绿"
-        button.text = "切换主题（当前：$name）"
+        val name = ThemeStore.themeOptions.find { it.first == currentKey }?.second ?: "Mint"
+        button.text = "Switch Theme (Current: $name)"
     }
 
     private fun showThemePicker(button: Button) {
@@ -70,7 +70,7 @@ class SettingsActivity : BaseActivity() {
         val displayNames = options.map { it.second }.toTypedArray()
 
         AlertDialog.Builder(this)
-            .setTitle("选择主题")
+            .setTitle("Select Theme")
             .setSingleChoiceItems(displayNames, currentIndex) { dialog, which ->
                 val selectedKey = options[which].first
                 if (selectedKey != currentKey) {
@@ -80,7 +80,7 @@ class SettingsActivity : BaseActivity() {
                 }
                 dialog.dismiss()
             }
-            .setNegativeButton("取消", null)
+            .setNegativeButton("Cancel", null)
             .show()
     }
 }

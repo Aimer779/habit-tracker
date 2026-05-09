@@ -87,7 +87,7 @@
             android:id="@+id/btnCheckIn"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
-            android:text="打卡"
+            android:text="Check In"
             android:textSize="11sp"
             android:textColor="@android:color/white"
             app:cornerRadius="18dp"

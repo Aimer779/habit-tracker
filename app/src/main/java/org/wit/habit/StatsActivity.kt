@@ -32,10 +32,10 @@ class StatsActivity : BaseActivity() {
         }
         val totalCheckIns = habits.sumOf { it.checkInCounts.values.sum() }
 
-        tvTotalHabits.text = "总习惯数：$totalHabits"
-        tvTodayCompleted.text = "今日完成：$todayCompleted"
-        tvTodayRate.text = "今日完成率：$todayRate"
-        tvTotalCheckIns.text = "总打卡次数：$totalCheckIns"
+        tvTotalHabits.text = "Total Habits: $totalHabits"
+        tvTodayCompleted.text = "Today Completed: $todayCompleted"
+        tvTodayRate.text = "Today's Completion Rate: $todayRate"
+        tvTotalCheckIns.text = "Total Check-ins: $totalCheckIns"
 
         findViewById<Button>(R.id.btnBack).setOnClickListener {
             finish()

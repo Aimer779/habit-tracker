@@ -128,7 +128,7 @@ class HabitAdapter(
 
             val today = DateUtils.today()
             val count = habit.checkInCounts[today] ?: 0
-            tvProgress.text = "今日进度：$count/${habit.targetCount}"
+            tvProgress.text = "Today's Progress: $count/${habit.targetCount}"
 
             val themeColor = ContextCompat.getColor(itemView.context, HabitColors.getColorRes(habit.color))
             cardView.setCardBackgroundColor(android.graphics.Color.WHITE)
@@ -151,13 +151,13 @@ class HabitAdapter(
         val isCompleted = count >= habit.targetCount
 
         if (isCompleted) {
-            button.text = "撤销打卡"
+            button.text = "Undo Check-in"
             button.backgroundTintList = android.content.res.ColorStateList.valueOf(android.graphics.Color.parseColor("#F44336"))
             button.setOnClickListener {
                 listener.onCancelCheckInClick(habit)
             }
         } else {
-            button.text = "打卡"
+            button.text = "Check In"
             button.backgroundTintList = android.content.res.ColorStateList.valueOf(themeColor)
             button.setOnClickListener {
                 listener.onCheckInClick(habit)

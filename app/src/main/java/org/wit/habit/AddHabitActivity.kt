@@ -44,8 +44,8 @@ class AddHabitActivity : BaseActivity() {
                 viewSelectedColor.setBackgroundColor(
                     ContextCompat.getColor(this, HabitColors.getColorRes(selectedColor))
                 )
-                title = "编辑习惯"
-                findViewById<Button>(R.id.btnSave).text = "更新"
+                title = "Edit Habit"
+                findViewById<Button>(R.id.btnSave).text = "Update"
             }
         }
 
@@ -77,7 +77,7 @@ class AddHabitActivity : BaseActivity() {
                 }
                 finish()
             } else {
-                editName.error = "请输入习惯名称"
+                editName.error = "Please enter a habit name"
             }
         }
 
@@ -89,7 +89,7 @@ class AddHabitActivity : BaseActivity() {
     private fun showIconPicker() {
         val icons = HabitColors.iconOptions.toTypedArray()
         AlertDialog.Builder(this)
-            .setTitle("选择图标")
+            .setTitle("Select Icon")
             .setItems(icons) { _, which ->
                 selectedIcon = icons[which]
                 tvSelectedIcon.text = selectedIcon
@@ -100,7 +100,7 @@ class AddHabitActivity : BaseActivity() {
     private fun showColorPicker() {
         val displayNames = HabitColors.colorOptions.map { it.second }.toTypedArray()
         AlertDialog.Builder(this)
-            .setTitle("选择颜色")
+            .setTitle("Select Color")
             .setItems(displayNames) { _, which ->
                 selectedColor = HabitColors.colorOptions[which].first
                 viewSelectedColor.setBackgroundColor(
