@@ -1,5 +1,5 @@
 ## Project Overview
-这是一个基于 Kotlin 的 Android 原生习惯打卡 App，项目采用课程基础技术实现，优先保证可以在 Android Studio 中正常运行。App 功能包括：用户可以添加习惯、查看习惯列表、删除习惯、点击习惯卡片进行每日打卡、取消当天打卡，并在统计页面查看总习惯数、今日完成数量、今日完成率、总打卡次数等简单数据。界面使用 XML Layout 编写，主页面使用 RecyclerView 展示习惯列表，每个习惯以卡片形式显示名称、描述、今日是否完成和打卡按钮；页面结构使用多个 Activity，包括 MainActivity、AddHabitActivity 和 StatsActivity；列表展示使用 HabitAdapter，点击事件通过 Interface / Listener 回调处理；数据模型使用 Kotlin data class，例如 Habit 包含 id、name、description、createdDate、checkInDates；本地持久化不使用 Room 或 Firebase，而是使用 JSON 文件或 SharedPreferences 保存习惯数据和打卡日期，确保关闭 App 后数据仍然存在。整体架构保持简单清晰：Activity 负责页面展示和跳转，Adapter 负责列表渲染，Storage 类负责 JSON 读写，DateUtils 负责获取当天日期。请先生成一个最小可运行版本，避免使用复杂依赖、Jetpack Compose、Room、Navigation Component 或网络服务。
+这是一个基于 Kotlin 的 Android 原生习惯打卡 App，项目采用课程基础技术实现，优先保证可以在 Android Studio 中正常运行。App 功能包括：用户可以添加习惯、查看习惯列表、删除习惯、点击习惯卡片进行每日打卡、取消当天打卡，并在统计页面查看总习惯数、今日完成数量、今日完成率、总打卡次数等简单数据。
 
 ## Tech Stack
 - **构建系统**：Gradle (Kotlin DSL) + Android Gradle Plugin 9.2.0
