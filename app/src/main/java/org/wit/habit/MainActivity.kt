@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity(), HabitAdapter.OnHabitClickListener {
                     true
                 }
                 R.id.nav_settings -> {
-                    // 暂无设置页面
+                    startActivity(Intent(this, SettingsActivity::class.java))
                     true
                 }
                 else -> false

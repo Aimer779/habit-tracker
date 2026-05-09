@@ -61,6 +61,10 @@ class HabitStore(private val context: Context) {
         update(habit)
     }
 
+    fun clearAll() {
+        prefs.edit().remove(KEY_HABITS).apply()
+    }
+
     fun cancelCheckIn(habit: Habit, date: String) {
         habit.checkInDates.remove(date)
         update(habit)
