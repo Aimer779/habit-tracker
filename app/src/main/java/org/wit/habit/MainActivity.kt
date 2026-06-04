@@ -52,6 +52,10 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
             startActivity(Intent(this, AddHabitActivity::class.java))
         }
 
+        findViewById<MaterialButton>(R.id.btnComposePreview).setOnClickListener {
+            startActivity(Intent(this, ComposePreviewActivity::class.java))
+        }
+
         findViewById<ImageButton>(R.id.btnCalendar).setOnClickListener {
             currentViewMode = when (currentViewMode) {
                 HabitAdapter.ViewMode.MONTH -> HabitAdapter.ViewMode.WEEK
