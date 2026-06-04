@@ -1,11 +1,17 @@
 package org.wit.habit
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import androidx.compose.ui.platform.ComposeView
 import org.wit.habit.helpers.HabitStore
 import org.wit.habit.helpers.ThemeStore
+import org.wit.habit.ui.compose.FloatingBottomNav
+import org.wit.habit.ui.compose.NavTab
+import org.wit.habit.ui.theme.HabitTheme
+import timber.log.Timber
 
 class SettingsActivity : BaseActivity() {
 
@@ -39,7 +45,7 @@ class SettingsActivity : BaseActivity() {
                 .setMessage("Are you sure you want to clear all habit data? This action cannot be undone.")
                 .setPositiveButton("OK") { _, _ ->
                     habitStore.clearAll()
-                    timber.log.Timber.i("User cleared all habit data")
+                    Timber.i("User cleared all habit data")
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
@@ -56,6 +62,8 @@ class SettingsActivity : BaseActivity() {
         btnBack.setOnClickListener {
             finish()
         }
+
+        setupBottomNav()
     }
 
     private fun updateThemeButtonText(button: Button) {
@@ -76,7 +84,7 @@ class SettingsActivity : BaseActivity() {
                 val selectedKey = options[which].first
                 if (selectedKey != currentKey) {
                     ThemeStore.setTheme(this, selectedKey)
-                    timber.log.Timber.i("User switched theme to: $selectedKey")
+                    Timber.i("User switched theme to: $selectedKey")
                     updateThemeButtonText(button)
                     recreate()
                 }
@@ -84,5 +92,32 @@ class SettingsActivity : BaseActivity() {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    private fun setupBottomNav() {
+        val composeNavView = findViewById<ComposeView>(R.id.composeNavView)
+        composeNavView.setContent {
+            HabitTheme {
+                FloatingBottomNav(
+                    selectedTab = NavTab.SETTINGS,
+                    onTabSelected = { tab ->
+                        when (tab) {
+                            NavTab.HOME -> {
+                                Timber.i("User navigated to Home")
+                                finish()
+                            }
+                            NavTab.STATS -> {
+                                Timber.i("User navigated to Stats")
+                                startActivity(Intent(this, StatsActivity::class.java))
+                                finish()
+                            }
+                            NavTab.SETTINGS -> {
+                                Timber.i("User selected Settings tab (already on Settings)")
+                            }
+                        }
+                    }
+                )
+            }
+        }
     }
 }

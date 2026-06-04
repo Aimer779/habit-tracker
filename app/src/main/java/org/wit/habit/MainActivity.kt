@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
-import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -17,8 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
-import com.google.android.material.button.MaterialButton
 import org.wit.habit.helpers.DateUtils
 import org.wit.habit.helpers.HabitStore
 import org.wit.habit.model.Habit
@@ -31,14 +28,11 @@ class MainActivity : BaseActivity() {
     private lateinit var habitStore: HabitStore
     private lateinit var composeView: ComposeView
     private lateinit var tvEmpty: TextView
-    private lateinit var btnFilter: MaterialButton
 
-    private var currentFilter = Filter.ALL
+    private var currentFilter = FilterOption.ALL
     private var isAscending = true
     private var currentViewMode = ViewMode.MONTH
     private var currentTab = NavTab.HOME
-
-    enum class Filter { ALL, CHECKED_IN, NOT_CHECKED_IN }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +44,6 @@ class MainActivity : BaseActivity() {
 
         composeView = findViewById(R.id.composeView)
         tvEmpty = findViewById(R.id.tvEmpty)
-        btnFilter = findViewById(R.id.btnFilter)
 
         // Setup Compose content with floating navigation and FAB
         setupComposeContent()
@@ -65,42 +58,11 @@ class MainActivity : BaseActivity() {
             refreshComposeContent()
         }
 
-        btnFilter.setOnClickListener {
-            showFilterPopup(it)
-        }
-
         findViewById<ImageButton>(R.id.btnSort).setOnClickListener {
             isAscending = !isAscending
             Timber.i("User toggled sort order: ascending=$isAscending")
             refreshComposeContent()
         }
-    }
-
-    private fun showFilterPopup(anchor: View) {
-        val popup = PopupMenu(this, anchor)
-        popup.menuInflater.inflate(R.menu.filter_menu, popup.menu)
-        popup.setOnMenuItemClickListener { item ->
-            when (item.itemId) {
-                R.id.filter_all -> {
-                    currentFilter = Filter.ALL
-                    btnFilter.text = getString(R.string.all)
-                    Timber.i("User selected filter: ALL")
-                }
-                R.id.filter_checked_in -> {
-                    currentFilter = Filter.CHECKED_IN
-                    btnFilter.text = getString(R.string.checked_in)
-                    Timber.i("User selected filter: CHECKED_IN")
-                }
-                R.id.filter_not_checked_in -> {
-                    currentFilter = Filter.NOT_CHECKED_IN
-                    btnFilter.text = getString(R.string.not_checked_in)
-                    Timber.i("User selected filter: NOT_CHECKED_IN")
-                }
-            }
-            refreshComposeContent()
-            true
-        }
-        popup.show()
     }
 
     override fun onResume() {
@@ -112,11 +74,29 @@ class MainActivity : BaseActivity() {
         composeView.setContent {
             HabitTheme {
                 var selectedTab by remember { mutableStateOf(currentTab) }
-                val habits = getFilteredAndSortedHabits()
+                var selectedFilter by remember { mutableStateOf(currentFilter) }
+                val habits = getFilteredAndSortedHabits(selectedFilter)
 
                 Box(modifier = Modifier.fillMaxSize()) {
                     // Main content
                     Column(modifier = Modifier.fillMaxSize()) {
+                        // Filter dropdown in Compose
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 8.dp),
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            FilterDropdown(
+                                selectedFilter = selectedFilter,
+                                onFilterSelected = { filter ->
+                                    selectedFilter = filter
+                                    currentFilter = filter
+                                    Timber.i("User selected filter: $filter")
+                                }
+                            )
+                        }
+
                         MainContent(
                             habits = habits,
                             viewMode = currentViewMode,
@@ -209,14 +189,14 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun getFilteredAndSortedHabits(): List<Habit> {
+    private fun getFilteredAndSortedHabits(filter: FilterOption = currentFilter): List<Habit> {
         val habits = habitStore.findAll()
         val today = DateUtils.today()
 
-        val filtered = when (currentFilter) {
-            Filter.ALL -> habits
-            Filter.CHECKED_IN -> habits.filter { (it.checkInCounts[today] ?: 0) >= it.targetCount }
-            Filter.NOT_CHECKED_IN -> habits.filter { (it.checkInCounts[today] ?: 0) < it.targetCount }
+        val filtered = when (filter) {
+            FilterOption.ALL -> habits
+            FilterOption.CHECKED_IN -> habits.filter { (it.checkInCounts[today] ?: 0) >= it.targetCount }
+            FilterOption.NOT_CHECKED_IN -> habits.filter { (it.checkInCounts[today] ?: 0) < it.targetCount }
         }
 
         return if (isAscending) {

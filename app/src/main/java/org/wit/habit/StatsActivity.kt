@@ -1,15 +1,21 @@
 package org.wit.habit
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.compose.ui.platform.ComposeView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wit.habit.helpers.DateUtils
 import org.wit.habit.helpers.HabitStore
 import org.wit.habit.model.Habit
+import org.wit.habit.ui.compose.FloatingBottomNav
+import org.wit.habit.ui.compose.NavTab
+import org.wit.habit.ui.theme.HabitTheme
+import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -52,6 +58,7 @@ class StatsActivity : BaseActivity() {
 
         initViews()
         setupListeners()
+        setupBottomNav()
         updateUI()
     }
 
@@ -78,6 +85,33 @@ class StatsActivity : BaseActivity() {
 
         btnPrev.setOnClickListener { navigatePeriod(-1) }
         btnNext.setOnClickListener { navigatePeriod(1) }
+    }
+
+    private fun setupBottomNav() {
+        val composeNavView = findViewById<ComposeView>(R.id.composeNavView)
+        composeNavView.setContent {
+            HabitTheme {
+                FloatingBottomNav(
+                    selectedTab = NavTab.STATS,
+                    onTabSelected = { tab ->
+                        when (tab) {
+                            NavTab.HOME -> {
+                                Timber.i("User navigated to Home")
+                                finish()
+                            }
+                            NavTab.STATS -> {
+                                Timber.i("User selected Stats tab (already on Stats)")
+                            }
+                            NavTab.SETTINGS -> {
+                                Timber.i("User navigated to Settings")
+                                startActivity(Intent(this, SettingsActivity::class.java))
+                                finish()
+                            }
+                        }
+                    }
+                )
+            }
+        }
     }
 
     private fun switchTab(tab: Int) {
