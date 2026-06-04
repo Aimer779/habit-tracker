@@ -6,28 +6,30 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.TextView
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.compose.ui.platform.ComposeView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.wit.habit.helpers.DateUtils
 import org.wit.habit.helpers.HabitStore
 import org.wit.habit.model.Habit
+import org.wit.habit.ui.compose.HabitCardCallbacks
+import org.wit.habit.ui.compose.MainContent
+import org.wit.habit.ui.compose.ViewMode
+import org.wit.habit.ui.theme.HabitTheme
 import timber.log.Timber
 
-class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
+class MainActivity : BaseActivity() {
 
     private lateinit var habitStore: HabitStore
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var habitAdapter: HabitAdapter
+    private lateinit var composeView: ComposeView
     private lateinit var tvEmpty: TextView
     private lateinit var btnFilter: MaterialButton
     private lateinit var bottomNavigationView: BottomNavigationView
 
     private var currentFilter = Filter.ALL
     private var isAscending = true
-    private var currentViewMode = HabitAdapter.ViewMode.MONTH
+    private var currentViewMode = ViewMode.MONTH
 
     enum class Filter { ALL, CHECKED_IN, NOT_CHECKED_IN }
 
@@ -39,31 +41,26 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
 
         habitStore = HabitStore(this)
 
-        recyclerView = findViewById(R.id.recyclerView)
+        composeView = findViewById(R.id.composeView)
         tvEmpty = findViewById(R.id.tvEmpty)
         btnFilter = findViewById(R.id.btnFilter)
         bottomNavigationView = findViewById(R.id.bottomNavigationView)
 
-        habitAdapter = HabitAdapter(emptyList(), currentViewMode, this)
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
-        recyclerView.adapter = habitAdapter
+        // Setup Compose content
+        setupComposeContent()
 
         findViewById<FloatingActionButton>(R.id.fabAdd).setOnClickListener {
             startActivity(Intent(this, AddHabitActivity::class.java))
         }
 
-        findViewById<MaterialButton>(R.id.btnComposePreview).setOnClickListener {
-            startActivity(Intent(this, ComposePreviewActivity::class.java))
-        }
-
         findViewById<ImageButton>(R.id.btnCalendar).setOnClickListener {
             currentViewMode = when (currentViewMode) {
-                HabitAdapter.ViewMode.MONTH -> HabitAdapter.ViewMode.WEEK
-                HabitAdapter.ViewMode.WEEK -> HabitAdapter.ViewMode.DAY
-                HabitAdapter.ViewMode.DAY -> HabitAdapter.ViewMode.MONTH
+                ViewMode.MONTH -> ViewMode.WEEK
+                ViewMode.WEEK -> ViewMode.DAY
+                ViewMode.DAY -> ViewMode.MONTH
             }
             Timber.i("User switched view mode to: $currentViewMode")
-            refreshList()
+            refreshComposeContent()
         }
 
         btnFilter.setOnClickListener {
@@ -73,13 +70,13 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
         findViewById<ImageButton>(R.id.btnSort).setOnClickListener {
             isAscending = !isAscending
             Timber.i("User toggled sort order: ascending=$isAscending")
-            refreshList()
+            refreshComposeContent()
         }
 
         bottomNavigationView.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
-                    refreshList()
+                    refreshComposeContent()
                     true
                 }
                 R.id.nav_stats -> {
@@ -117,7 +114,7 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
                     Timber.i("User selected filter: NOT_CHECKED_IN")
                 }
             }
-            refreshList()
+            refreshComposeContent()
             true
         }
         popup.show()
@@ -125,10 +122,50 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
 
     override fun onResume() {
         super.onResume()
-        refreshList()
+        refreshComposeContent()
     }
 
-    private fun refreshList() {
+    private fun setupComposeContent() {
+        composeView.setContent {
+            HabitTheme {
+                val habits = getFilteredAndSortedHabits()
+
+                MainContent(
+                    habits = habits,
+                    viewMode = currentViewMode,
+                    isEmpty = habits.isEmpty(),
+                    onCheckIn = { habit ->
+                        val today = DateUtils.today()
+                        habitStore.checkIn(habit, today)
+                        Timber.i("User checked in habit: ${habit.name} on $today")
+                        refreshComposeContent()
+                    },
+                    onCancelCheckIn = { habit ->
+                        val today = DateUtils.today()
+                        habitStore.cancelCheckIn(habit, today)
+                        Timber.i("User cancelled check-in for habit: ${habit.name} on $today")
+                        refreshComposeContent()
+                    },
+                    onEdit = { habit ->
+                        val intent = Intent(this, AddHabitActivity::class.java)
+                        intent.putExtra("habit_id", habit.id)
+                        startActivity(intent)
+                    },
+                    onDelete = { habit ->
+                        habitStore.delete(habit)
+                        Timber.i("User deleted habit: ${habit.name}")
+                        refreshComposeContent()
+                    }
+                )
+            }
+        }
+
+        // Update empty state visibility
+        val habits = getFilteredAndSortedHabits()
+        tvEmpty.visibility = if (habits.isEmpty()) View.VISIBLE else View.GONE
+    }
+
+    private fun getFilteredAndSortedHabits(): List<Habit> {
         val habits = habitStore.findAll()
         val today = DateUtils.today()
 
@@ -138,52 +175,14 @@ class MainActivity : BaseActivity(), HabitAdapter.OnHabitClickListener {
             Filter.NOT_CHECKED_IN -> habits.filter { (it.checkInCounts[today] ?: 0) < it.targetCount }
         }
 
-        val sorted = if (isAscending) {
+        return if (isAscending) {
             filtered.sortedBy { it.name }
         } else {
             filtered.sortedByDescending { it.name }
         }
-
-        if (sorted.isEmpty()) {
-            tvEmpty.visibility = View.VISIBLE
-            recyclerView.visibility = View.GONE
-        } else {
-            tvEmpty.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
-            recyclerView.layoutManager = when (currentViewMode) {
-                HabitAdapter.ViewMode.MONTH -> GridLayoutManager(this, 2)
-                HabitAdapter.ViewMode.WEEK -> androidx.recyclerview.widget.LinearLayoutManager(this)
-                HabitAdapter.ViewMode.DAY -> androidx.recyclerview.widget.LinearLayoutManager(this)
-            }
-            val newAdapter = HabitAdapter(sorted, currentViewMode, this)
-            recyclerView.adapter = newAdapter
-            habitAdapter = newAdapter
-        }
     }
 
-    override fun onCheckInClick(habit: Habit) {
-        val today = DateUtils.today()
-        habitStore.checkIn(habit, today)
-        Timber.i("User checked in habit: ${habit.name} on $today")
-        refreshList()
-    }
-
-    override fun onCancelCheckInClick(habit: Habit) {
-        val today = DateUtils.today()
-        habitStore.cancelCheckIn(habit, today)
-        Timber.i("User cancelled check-in for habit: ${habit.name} on $today")
-        refreshList()
-    }
-
-    override fun onEditClick(habit: Habit) {
-        val intent = Intent(this, AddHabitActivity::class.java)
-        intent.putExtra("habit_id", habit.id)
-        startActivity(intent)
-    }
-
-    override fun onDeleteClick(habit: Habit) {
-        habitStore.delete(habit)
-        Timber.i("User deleted habit: ${habit.name}")
-        refreshList()
+    private fun refreshComposeContent() {
+        setupComposeContent()
     }
 }
