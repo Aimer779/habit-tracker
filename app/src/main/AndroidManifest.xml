@@ -29,6 +29,10 @@
         <activity
             android:name=".SettingsActivity"
             android:exported="false" />
+        <activity
+            android:name=".ComposePreviewActivity"
+            android:exported="false"
+            android:label="Compose Preview" />
     </application>
 
 </manifest>
