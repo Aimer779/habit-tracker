@@ -3,6 +3,9 @@ package org.wit.habit.ui.compose
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Undo
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,7 +43,8 @@ fun HabitCardDay(
                 onLongClick = { onLongClick(habit) }
             ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = MaterialTheme.shapes.large
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column(
             modifier = Modifier
@@ -92,9 +96,16 @@ fun HabitCardDay(
                 ),
                 shape = MaterialTheme.shapes.large
             ) {
+                Icon(
+                    imageVector = if (isCompleted) Icons.AutoMirrored.Filled.Undo else Icons.Default.Add,
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = if (isCompleted) "Uncheck" else "Check In",
-                    fontSize = 14.sp,
+                    text = if (isCompleted) "Cancel" else "Check",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             }

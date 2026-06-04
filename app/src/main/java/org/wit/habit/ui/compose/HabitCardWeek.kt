@@ -1,6 +1,9 @@
 package org.wit.habit.ui.compose
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Undo
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -32,7 +35,8 @@ fun HabitCardWeek(
             .fillMaxWidth()
             .padding(8.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = MaterialTheme.shapes.large
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Row(
             modifier = Modifier
@@ -90,11 +94,18 @@ fun HabitCardWeek(
                     containerColor = if (isCompleted) Color(0xFFF44336) else themeColor
                 ),
                 shape = MaterialTheme.shapes.large,
-                contentPadding = PaddingValues(0.dp)
+                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
             ) {
+                Icon(
+                    imageVector = if (isCompleted) Icons.AutoMirrored.Filled.Undo else Icons.Default.Add,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(2.dp))
                 Text(
-                    text = if (isCompleted) "Uncheck" else "Check In",
-                    fontSize = 11.sp,
+                    text = if (isCompleted) "Cancel" else "Check",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             }

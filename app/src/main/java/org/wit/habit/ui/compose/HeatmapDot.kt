@@ -21,7 +21,7 @@ fun HeatmapDot(
 ) {
     Box(
         modifier = modifier
-            .size(8.dp)
+            .size(18.dp)
             .background(
                 color = if (isCompleted) color else IncompleteColor,
                 shape = CircleShape

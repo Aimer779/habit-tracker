@@ -3,6 +3,9 @@ package org.wit.habit.ui.compose
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Undo
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,7 +44,8 @@ fun HabitCardMonth(
                 onLongClick = { onLongClick(habit) }
             ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = MaterialTheme.shapes.large
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column(
             modifier = Modifier
@@ -51,24 +55,22 @@ fun HabitCardMonth(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = habit.icon,
                     fontSize = 20.sp
                 )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = habit.name,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.weight(1f))
             }
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = habit.name,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.fillMaxWidth()
-            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -114,9 +116,16 @@ fun HabitCardMonth(
                 ),
                 shape = MaterialTheme.shapes.large
             ) {
+                Icon(
+                    imageVector = if (isCompleted) Icons.AutoMirrored.Filled.Undo else Icons.Default.Add,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = if (isCompleted) "Uncheck" else "Check In",
-                    fontSize = 12.sp,
+                    text = if (isCompleted) "Cancel" else "Check",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             }
