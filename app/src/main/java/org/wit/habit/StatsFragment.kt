@@ -243,7 +243,7 @@ class StatsFragment : Fragment() {
         tvTotalCheckIns.text = totalCheckIns.toString()
         tvActiveDays.text = activeDaysSet.size.toString()
         tvCurrentStreak.text = calculateCurrentStreak(habits, today).toString()
-        tvLongestStreak.text = calculateLongestStreak(habits).toString()
+        tvLongestStreak.text = calculateLongestStreak(activeDaysSet).toString()
 
         val rankings = habits
             .filter { (habitMonthCounts[it.id] ?: 0) > 0 }
@@ -281,7 +281,7 @@ class StatsFragment : Fragment() {
         tvTotalCheckIns.text = totalCheckIns.toString()
         tvActiveDays.text = activeDaysSet.size.toString()
         tvCurrentStreak.text = calculateCurrentStreak(habits, today).toString()
-        tvLongestStreak.text = calculateLongestStreak(habits).toString()
+        tvLongestStreak.text = calculateLongestStreak(activeDaysSet).toString()
 
         val rankings = habits
             .filter { (habitWeekCounts[it.id] ?: 0) > 0 }
@@ -319,7 +319,7 @@ class StatsFragment : Fragment() {
         tvTotalCheckIns.text = totalCheckIns.toString()
         tvActiveDays.text = activeDaysSet.size.toString()
         tvCurrentStreak.text = calculateCurrentStreak(habits, today).toString()
-        tvLongestStreak.text = calculateLongestStreak(habits).toString()
+        tvLongestStreak.text = calculateLongestStreak(activeDaysSet).toString()
 
         val rankings = habits
             .filter { (habitYearCounts[it.id] ?: 0) > 0 }
@@ -366,16 +366,11 @@ class StatsFragment : Fragment() {
         return streak
     }
 
-    private fun calculateLongestStreak(habits: List<Habit>): Int {
-        val allDates = mutableSetOf<String>()
-        habits.forEach { habit ->
-            allDates.addAll(habit.checkInCounts.keys)
-        }
-
-        if (allDates.isEmpty()) return 0
+    private fun calculateLongestStreak(activeDates: Set<String>): Int {
+        if (activeDates.isEmpty()) return 0
 
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val sortedDates = allDates.mapNotNull { formatter.parse(it) }.sorted()
+        val sortedDates = activeDates.mapNotNull { formatter.parse(it) }.sorted()
 
         if (sortedDates.isEmpty()) return 0
 

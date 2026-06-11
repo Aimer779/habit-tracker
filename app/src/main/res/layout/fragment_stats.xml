@@ -35,26 +35,44 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/tabWeek"
-                android:layout_width="80dp"
+                android:layout_width="96dp"
                 android:layout_height="40dp"
                 android:text="Week"
+                android:textAllCaps="false"
                 android:textSize="14sp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 style="@style/Widget.Material3.Button.OutlinedButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/tabMonth"
-                android:layout_width="80dp"
+                android:layout_width="96dp"
                 android:layout_height="40dp"
                 android:text="Month"
+                android:textAllCaps="false"
                 android:textSize="14sp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 style="@style/Widget.Material3.Button.OutlinedButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/tabYear"
-                android:layout_width="80dp"
+                android:layout_width="96dp"
                 android:layout_height="40dp"
                 android:text="Year"
+                android:textAllCaps="false"
                 android:textSize="14sp"
+                android:insetLeft="0dp"
+                android:insetRight="0dp"
+                android:minWidth="0dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
                 style="@style/Widget.Material3.Button.OutlinedButton" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
@@ -120,12 +138,13 @@
                     android:gravity="center"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="✅"
-                        android:textSize="24sp"
-                        android:layout_marginBottom="8dp" />
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:contentDescription="Total check-ins"
+                        android:src="@drawable/ic_check_circle"
+                        app:tint="?attr/colorPrimary" />
 
                     <TextView
                         android:id="@+id/tvTotalCheckIns"
@@ -162,12 +181,13 @@
                     android:gravity="center"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🔥"
-                        android:textSize="24sp"
-                        android:layout_marginBottom="8dp" />
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:contentDescription="Current streak"
+                        android:src="@drawable/ic_local_fire_department"
+                        app:tint="?attr/colorError" />
 
                     <TextView
                         android:id="@+id/tvCurrentStreak"
@@ -204,12 +224,13 @@
                     android:gravity="center"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🏆"
-                        android:textSize="24sp"
-                        android:layout_marginBottom="8dp" />
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:contentDescription="Longest streak"
+                        android:src="@drawable/ic_military_tech"
+                        app:tint="?attr/colorSecondary" />
 
                     <TextView
                         android:id="@+id/tvLongestStreak"
@@ -246,12 +267,13 @@
                     android:gravity="center"
                     android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="📅"
-                        android:textSize="24sp"
-                        android:layout_marginBottom="8dp" />
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:contentDescription="Active days"
+                        android:src="@drawable/ic_calendar"
+                        app:tint="?attr/colorOnSurfaceVariant" />
 
                     <TextView
                         android:id="@+id/tvActiveDays"
