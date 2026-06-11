@@ -24,12 +24,6 @@
             android:name=".AddHabitActivity"
             android:exported="false" />
         <activity
-            android:name=".StatsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SettingsActivity"
-            android:exported="false" />
-        <activity
             android:name=".ComposePreviewActivity"
             android:exported="false"
             android:label="Compose Preview" />

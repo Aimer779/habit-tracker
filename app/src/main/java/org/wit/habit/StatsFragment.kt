@@ -1,26 +1,21 @@
 package org.wit.habit
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wit.habit.helpers.DateUtils
 import org.wit.habit.helpers.HabitStore
 import org.wit.habit.model.Habit
-import org.wit.habit.ui.compose.FloatingBottomNav
-import org.wit.habit.ui.compose.NavTab
-import org.wit.habit.ui.theme.HabitTheme
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class StatsActivity : BaseActivity() {
+class StatsFragment : Fragment() {
 
     private lateinit var habitStore: HabitStore
     private lateinit var tvPeriod: TextView
@@ -46,36 +41,50 @@ class StatsActivity : BaseActivity() {
         const val TAB_YEAR = 2
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_stats)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return inflater.inflate(R.layout.fragment_stats, container, false)
+    }
 
-        habitStore = HabitStore(this)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        habitStore = HabitStore(requireContext())
 
         val cal = Calendar.getInstance()
         currentYear = cal.get(Calendar.YEAR)
         currentMonth = cal.get(Calendar.MONTH) + 1
 
-        initViews()
+        initViews(view)
         setupListeners()
-        setupBottomNav()
         updateUI()
     }
 
-    private fun initViews() {
-        tvPeriod = findViewById(R.id.tvPeriod)
-        btnPrev = findViewById(R.id.btnPrev)
-        btnNext = findViewById(R.id.btnNext)
-        tabWeek = findViewById(R.id.tabWeek)
-        tabMonth = findViewById(R.id.tabMonth)
-        tabYear = findViewById(R.id.tabYear)
-        tvTotalCheckIns = findViewById(R.id.tvTotalCheckIns)
-        tvCurrentStreak = findViewById(R.id.tvCurrentStreak)
-        tvLongestStreak = findViewById(R.id.tvLongestStreak)
-        tvActiveDays = findViewById(R.id.tvActiveDays)
-        rvRankings = findViewById(R.id.rvRankings)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            // Refresh stats when this tab becomes visible again
+            updateUI()
+        }
+    }
 
-        rvRankings.layoutManager = LinearLayoutManager(this)
+    private fun initViews(view: View) {
+        tvPeriod = view.findViewById(R.id.tvPeriod)
+        btnPrev = view.findViewById(R.id.btnPrev)
+        btnNext = view.findViewById(R.id.btnNext)
+        tabWeek = view.findViewById(R.id.tabWeek)
+        tabMonth = view.findViewById(R.id.tabMonth)
+        tabYear = view.findViewById(R.id.tabYear)
+        tvTotalCheckIns = view.findViewById(R.id.tvTotalCheckIns)
+        tvCurrentStreak = view.findViewById(R.id.tvCurrentStreak)
+        tvLongestStreak = view.findViewById(R.id.tvLongestStreak)
+        tvActiveDays = view.findViewById(R.id.tvActiveDays)
+        rvRankings = view.findViewById(R.id.rvRankings)
+
+        rvRankings.layoutManager = LinearLayoutManager(requireContext())
     }
 
     private fun setupListeners() {
@@ -85,33 +94,6 @@ class StatsActivity : BaseActivity() {
 
         btnPrev.setOnClickListener { navigatePeriod(-1) }
         btnNext.setOnClickListener { navigatePeriod(1) }
-    }
-
-    private fun setupBottomNav() {
-        val composeNavView = findViewById<ComposeView>(R.id.composeNavView)
-        composeNavView.setContent {
-            HabitTheme {
-                FloatingBottomNav(
-                    selectedTab = NavTab.STATS,
-                    onTabSelected = { tab ->
-                        when (tab) {
-                            NavTab.HOME -> {
-                                Timber.i("User navigated to Home")
-                                finish()
-                            }
-                            NavTab.STATS -> {
-                                Timber.i("User selected Stats tab (already on Stats)")
-                            }
-                            NavTab.SETTINGS -> {
-                                Timber.i("User navigated to Settings")
-                                startActivity(Intent(this, SettingsActivity::class.java))
-                                finish()
-                            }
-                        }
-                    }
-                )
-            }
-        }
     }
 
     private fun switchTab(tab: Int) {
@@ -134,10 +116,10 @@ class StatsActivity : BaseActivity() {
         tabs.forEachIndexed { index, textView ->
             if (index == currentTab) {
                 textView.setBackgroundResource(selectedBg)
-                textView.setTextColor(getColor(android.R.color.white))
+                textView.setTextColor(requireContext().getColor(android.R.color.white))
             } else {
                 textView.setBackgroundResource(normalBg)
-                textView.setTextColor(getColor(android.R.color.black))
+                textView.setTextColor(requireContext().getColor(android.R.color.black))
             }
         }
     }

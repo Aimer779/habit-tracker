@@ -22,14 +22,19 @@
 - **主界面（习惯列表）**: Jetpack Compose + Material3
 - **其他页面**: 传统 XML + View Binding
   - AddHabitActivity（添加/编辑习惯）
-  - StatsActivity（统计页面）
-  - SettingsActivity（设置页面）
-  
-**导航**: 传统 Activity + Intent（无 Navigation Component）
+  - StatsFragment（统计页面）
+  - SettingsFragment（设置页面）
+
+**导航**: 单 Activity + Fragment 架构
+- MainActivity 是唯一的 tab 容器 Activity，底部悬浮导航栏（Compose）+ FAB 常驻
+- Home / Stats / Settings 三个 tab 由 Fragment 承载，使用 FragmentManager `show/hide` 手动切换（保留各 tab 状态，无 Navigation Component）
+- AddHabitActivity 保持独立 Activity（模态编辑页，Intent 启动）
+- 返回键：非 Home tab 时返回 Home，Home tab 时交给系统默认行为
+- 主题切换 recreate 后通过 savedInstanceState 恢复当前 tab
 
 **数据持久化**: 本地 JSON 文件 + SharedPreferences
 
-**状态管理**: Activity 本地状态（无 ViewModel 层）
+**状态管理**: Activity / Fragment 本地状态（无 ViewModel 层）
 
 ### 核心依赖
 
@@ -43,6 +48,7 @@
 - AppCompat: 1.7.1
 - Core KTX: 1.18.0
 - Activity KTX: 1.13.0
+- Fragment KTX: 1.8.5（单 Activity + Fragment 导航）
 - ConstraintLayout: 2.2.1（用于 XML 布局框架）
 
 #### Material Design (XML)
@@ -82,14 +88,15 @@ app/src/main/java/org/wit/habit/ui/
     └── Theme.kt                  # HabitTheme (Material3)
 ```
 
-### 传统 Activity (XML)
+### 传统 Activity / Fragment (XML)
 ```
 app/src/main/java/org/wit/habit/
-├── MainActivity.kt               # 主界面（Compose 集成）
-├── AddHabitActivity.kt           # 添加/编辑习惯
-├── StatsActivity.kt              # 统计页面
-├── SettingsActivity.kt           # 设置页面
-├── BaseActivity.kt               # 基类
+├── MainActivity.kt               # 唯一 tab 容器（Fragment 切换 + 常驻导航/FAB）
+├── HomeFragment.kt               # 主界面（Compose 集成，state 驱动重组）
+├── StatsFragment.kt              # 统计页面
+├── SettingsFragment.kt           # 设置页面
+├── AddHabitActivity.kt           # 添加/编辑习惯（独立 Activity）
+├── BaseActivity.kt               # 基类（主题应用）
 └── ComposePreviewActivity.kt     # Compose 测试界面
 ```
 
@@ -131,9 +138,9 @@ app/src/main/java/org/wit/habit/
 - 交互：点击编辑、长按删除
 
 #### 状态管理
-- 使用 `mutableStateListOf` 管理习惯列表
-- 每次操作后调用 `refreshComposeContent()` 触发重组
-- Map 修改需要 `copy()` 创建新对象触发重组
+- HomeFragment 使用 `mutableStateOf` 字段（filter / sort / viewMode / refreshTrigger）驱动重组
+- 数据变更后 `refreshTrigger++` 触发重新读取 HabitStore（findAll 每次返回新对象，无需手动 copy）
+- 常驻导航栏的选中 tab 是 MainActivity 的 `mutableStateOf`，切换时自动重组
 
 ---
 
@@ -167,7 +174,7 @@ app/src/main/java/org/wit/habit/
 
 ## 功能清单
 
-### 主界面 (MainActivity)
+### 主界面 (HomeFragment)
 - [x] 显示习惯列表（Compose UI）
 - [x] 3 种视图模式切换（月/周/日）
 - [x] 打卡/取消打卡
@@ -185,14 +192,14 @@ app/src/main/java/org/wit/habit/
 - [x] 设置目标次数
 - [x] 编辑模式：加载现有习惯数据
 
-### 统计页面 (StatsActivity)
+### 统计页面 (StatsFragment)
 - [x] 显示总习惯数
 - [x] 显示今日完成数量
 - [x] 显示今日完成率
 - [x] 显示总打卡次数
 - [x] 按月/周/年聚合统计
 
-### 设置页面 (SettingsActivity)
+### 设置页面 (SettingsFragment)
 - [x] 查看 app 版本
 - [x] 其他设置项（待扩展）
 
@@ -226,7 +233,7 @@ app/src/main/java/org/wit/habit/
 
 ### 短期
 - 迁移 AddHabitActivity 到 Compose
-- 迁移 StatsActivity 到 Compose
+- 迁移 StatsFragment 到 Compose
 - 添加单元测试和 UI 测试
 
 ### 长期
@@ -261,4 +268,4 @@ GitHub Issues: https://github.com/anthropics/claude-code/issues
 
 ---
 
-*Last Updated: 2026-06-04*
+*Last Updated: 2026-06-11*
