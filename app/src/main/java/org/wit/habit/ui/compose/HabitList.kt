@@ -17,7 +17,8 @@ fun HabitList(
     habits: List<Habit>,
     viewMode: ViewMode,
     callbacks: HabitCardCallbacks,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(8.dp)
 ) {
     val columns = when (viewMode) {
         ViewMode.MONTH -> 2
@@ -27,13 +28,14 @@ fun HabitList(
     LazyVerticalGrid(
         columns = GridCells.Fixed(columns),
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(8.dp)
+        contentPadding = contentPadding
     ) {
         items(habits, key = { it.id }) { habit ->
             HabitCard(
                 habit = habit,
                 viewMode = viewMode,
-                callbacks = callbacks
+                callbacks = callbacks,
+                modifier = Modifier.animateItem()
             )
         }
     }

@@ -5,9 +5,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import androidx.appcompat.app.AlertDialog
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,14 +22,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import org.wit.habit.helpers.DateUtils
 import org.wit.habit.helpers.HabitStore
 import org.wit.habit.model.Habit
 import org.wit.habit.ui.compose.FilterDropdown
 import org.wit.habit.ui.compose.FilterOption
 import org.wit.habit.ui.compose.MainContent
+import org.wit.habit.ui.compose.SortOrderButton
 import org.wit.habit.ui.compose.ViewMode
+import org.wit.habit.ui.compose.ViewModeSelector
 import org.wit.habit.ui.theme.HabitTheme
 import timber.log.Timber
 
@@ -53,20 +59,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         habitStore = HabitStore(requireContext())
-
-        view.findViewById<ImageButton>(R.id.btnCalendar).setOnClickListener {
-            currentViewMode = when (currentViewMode) {
-                ViewMode.MONTH -> ViewMode.WEEK
-                ViewMode.WEEK -> ViewMode.DAY
-                ViewMode.DAY -> ViewMode.MONTH
-            }
-            Timber.i("User switched view mode to: $currentViewMode")
-        }
-
-        view.findViewById<ImageButton>(R.id.btnSort).setOnClickListener {
-            isAscending = !isAscending
-            Timber.i("User toggled sort order: ascending=$isAscending")
-        }
+        applyInsets(view)
 
         val composeView = view.findViewById<ComposeView>(R.id.composeView)
         composeView.setViewCompositionStrategy(
@@ -74,6 +67,9 @@ class HomeFragment : Fragment() {
         )
         composeView.setContent {
             HabitTheme {
+                val allHabits = remember(refreshTrigger) {
+                    habitStore.findAll()
+                }
                 val habits = remember(refreshTrigger, currentFilter, isAscending) {
                     getFilteredAndSortedHabits()
                 }
@@ -83,7 +79,7 @@ class HomeFragment : Fragment() {
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 8.dp, vertical = 8.dp),
-                        horizontalArrangement = Arrangement.Start
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         FilterDropdown(
                             selectedFilter = currentFilter,
@@ -92,12 +88,30 @@ class HomeFragment : Fragment() {
                                 Timber.i("User selected filter: $filter")
                             }
                         )
+                        SortOrderButton(
+                            isAscending = isAscending,
+                            onClick = {
+                                isAscending = !isAscending
+                                Timber.i("User toggled sort order: ascending=$isAscending")
+                            }
+                        )
                     }
+
+                    ViewModeSelector(
+                        selectedViewMode = currentViewMode,
+                        onViewModeSelected = { viewMode ->
+                            currentViewMode = viewMode
+                            Timber.i("User switched view mode to: $currentViewMode")
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp)
+                    )
 
                     MainContent(
                         habits = habits,
                         viewMode = currentViewMode,
-                        isEmpty = habits.isEmpty(),
+                        hasAnyHabits = allHabits.isNotEmpty(),
                         onCheckIn = { habit ->
                             val today = DateUtils.today()
                             habitStore.checkIn(habit, today)
@@ -116,13 +130,15 @@ class HomeFragment : Fragment() {
                             startActivity(intent)
                         },
                         onDelete = { habit ->
-                            habitStore.delete(habit)
-                            Timber.i("User deleted habit: ${habit.name}")
-                            refreshTrigger++
+                            confirmDeleteHabit(habit)
                         },
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(bottom = 100.dp) // Space for floating nav + FAB
+                        modifier = Modifier.weight(1f),
+                        contentPadding = PaddingValues(
+                            start = 8.dp,
+                            top = 8.dp,
+                            end = 8.dp,
+                            bottom = 8.dp
+                        )
                     )
                 }
             }
@@ -139,6 +155,52 @@ class HomeFragment : Fragment() {
         if (!hidden) {
             refreshTrigger++
         }
+    }
+
+    private fun applyInsets(view: View) {
+        val initialLeft = view.paddingLeft
+        val initialTop = view.paddingTop
+        val initialRight = view.paddingRight
+        val initialBottom = view.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { target, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            target.setPadding(
+                initialLeft + bars.left,
+                initialTop + bars.top,
+                initialRight + bars.right,
+                initialBottom
+            )
+            insets
+        }
+    }
+
+    private fun confirmDeleteHabit(habit: Habit) {
+        val totalCheckIns = habit.checkInCounts.values.sum()
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle("Delete ${habit.name}?")
+            .setMessage("This habit has $totalCheckIns check-ins. You can undo immediately after deleting.")
+            .setPositiveButton("Delete") { _, _ ->
+                deleteHabitWithUndo(habit)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            .setTextColor(requireContext().getColor(com.google.android.material.R.color.design_default_color_error))
+    }
+
+    private fun deleteHabitWithUndo(habit: Habit) {
+        habitStore.delete(habit)
+        Timber.i("User deleted habit: ${habit.name}")
+        refreshTrigger++
+
+        Snackbar.make(requireView(), "Deleted ${habit.name}", Snackbar.LENGTH_LONG)
+            .setAction("Undo") {
+                habitStore.create(habit)
+                Timber.i("User restored deleted habit: ${habit.name}")
+                refreshTrigger++
+            }
+            .show()
     }
 
     private fun getFilteredAndSortedHabits(): List<Habit> {

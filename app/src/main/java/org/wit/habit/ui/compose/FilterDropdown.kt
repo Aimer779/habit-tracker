@@ -6,7 +6,6 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,7 +30,8 @@ fun FilterDropdown(
         Button(
             onClick = { expanded = true },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF26A69A)
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ),
             shape = MaterialTheme.shapes.large,
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
@@ -40,14 +40,12 @@ fun FilterDropdown(
             Text(
                 text = selectedFilter.displayName,
                 fontSize = 12.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.White
+                fontWeight = FontWeight.Medium
             )
             Spacer(modifier = Modifier.width(4.dp))
             Icon(
                 imageVector = Icons.Default.ArrowDropDown,
                 contentDescription = "Dropdown",
-                tint = Color.White,
                 modifier = Modifier.size(20.dp)
             )
         }
@@ -63,9 +61,9 @@ fun FilterDropdown(
                             text = option.displayName,
                             fontSize = 14.sp,
                             color = if (option == selectedFilter)
-                                Color(0xFF26A69A)
+                                MaterialTheme.colorScheme.primary
                             else
-                                Color.Black
+                                MaterialTheme.colorScheme.onSurface
                         )
                     },
                     onClick = {

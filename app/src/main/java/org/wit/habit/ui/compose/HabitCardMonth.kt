@@ -3,14 +3,10 @@ package org.wit.habit.ui.compose
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Undo
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -45,7 +41,7 @@ fun HabitCardMonth(
             ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(
             modifier = Modifier
@@ -74,6 +70,15 @@ fun HabitCardMonth(
 
             Spacer(modifier = Modifier.height(12.dp))
 
+            if (habit.targetCount > 1) {
+                Text(
+                    text = "Today: $count/${habit.targetCount}",
+                    fontSize = 12.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+
             // Heatmap Grid: 7 columns x 5 rows = 35 dots (last 35 days)
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -86,10 +91,9 @@ fun HabitCardMonth(
                             val dayIndex = 34 - (row * 7 + col)
                             val dateStr = DateUtils.daysAgo(dayIndex)
                             val dayCount = habit.checkInCounts[dateStr] ?: 0
-                            val dayCompleted = dayCount >= habit.targetCount
 
                             HeatmapDot(
-                                isCompleted = dayCompleted,
+                                progress = dayCount.toFloat() / habit.targetCount.coerceAtLeast(1),
                                 color = themeColor,
                                 modifier = Modifier.padding(2.dp)
                             )
@@ -100,7 +104,9 @@ fun HabitCardMonth(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            Button(
+            CheckInButton(
+                isCompleted = isCompleted,
+                color = themeColor,
                 onClick = {
                     if (isCompleted) {
                         onCancelCheckIn(habit)
@@ -111,24 +117,9 @@ fun HabitCardMonth(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(40.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isCompleted) Color(0xFFF44336) else themeColor
-                ),
-                shape = MaterialTheme.shapes.large
-            ) {
-                Icon(
-                    imageVector = if (isCompleted) Icons.AutoMirrored.Filled.Undo else Icons.Default.Add,
-                    contentDescription = null,
-                    modifier = Modifier.size(18.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = if (isCompleted) "Cancel" else "Check",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            }
+                iconSize = 18.dp,
+                fontSize = 14.sp
+            )
         }
     }
 }

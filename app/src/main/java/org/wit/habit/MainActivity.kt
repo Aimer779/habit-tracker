@@ -5,18 +5,21 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.view.WindowCompat
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import org.wit.habit.ui.compose.FloatingBottomNav
@@ -40,6 +43,7 @@ class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContentView(R.layout.activity_main)
 
         Timber.i("Habit Tracker started")
@@ -56,6 +60,7 @@ class MainActivity : BaseActivity() {
 
         onBackPressedDispatcher.addCallback(this, backToHomeCallback)
         setupBottomNav()
+        syncFragmentBottomInset()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -67,7 +72,9 @@ class MainActivity : BaseActivity() {
         findViewById<ComposeView>(R.id.composeNavView).setContent {
             HabitTheme {
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // FAB above the nav bar, only on the Home tab
@@ -78,8 +85,8 @@ class MainActivity : BaseActivity() {
                                     Intent(this@MainActivity, AddHabitActivity::class.java)
                                 )
                             },
-                            containerColor = Color(0xFF26A69A),
-                            contentColor = Color.White,
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary,
                             shape = CircleShape
                         ) {
                             Icon(
@@ -94,6 +101,22 @@ class MainActivity : BaseActivity() {
                         onTabSelected = ::switchTab
                     )
                 }
+            }
+        }
+    }
+
+    private fun syncFragmentBottomInset() {
+        val fragmentContainer = findViewById<FragmentContainerView>(R.id.fragmentContainer)
+        val navView = findViewById<ComposeView>(R.id.composeNavView)
+        val initialLeft = fragmentContainer.paddingLeft
+        val initialTop = fragmentContainer.paddingTop
+        val initialRight = fragmentContainer.paddingRight
+
+        navView.addOnLayoutChangeListener { _, _, top, _, bottom, _, oldTop, _, oldBottom ->
+            val navHeight = bottom - top
+            val oldNavHeight = oldBottom - oldTop
+            if (navHeight != oldNavHeight || fragmentContainer.paddingBottom != navHeight) {
+                fragmentContainer.setPadding(initialLeft, initialTop, initialRight, navHeight)
             }
         }
     }

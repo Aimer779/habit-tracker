@@ -1,14 +1,12 @@
 package org.wit.habit.ui.compose
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Undo
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,11 +16,14 @@ import org.wit.habit.helpers.DateUtils
 import org.wit.habit.model.Habit
 import org.wit.habit.ui.theme.HabitTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HabitCardWeek(
     habit: Habit,
     onCheckIn: (Habit) -> Unit,
     onCancelCheckIn: (Habit) -> Unit,
+    onClick: (Habit) -> Unit,
+    onLongClick: (Habit) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val today = DateUtils.today()
@@ -33,10 +34,14 @@ fun HabitCardWeek(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .combinedClickable(
+                onClick = { onClick(habit) },
+                onLongClick = { onLongClick(habit) }
+            ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Row(
             modifier = Modifier
@@ -51,14 +56,25 @@ fun HabitCardWeek(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Text(
-                text = habit.name,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Bold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+            Column(
                 modifier = Modifier.weight(1f)
-            )
+            ) {
+                Text(
+                    text = habit.name,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                if (habit.targetCount > 1) {
+                    Text(
+                        text = "Today: $count/${habit.targetCount}",
+                        fontSize = 12.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        maxLines = 1
+                    )
+                }
+            }
 
             Spacer(modifier = Modifier.width(8.dp))
 
@@ -69,17 +85,18 @@ fun HabitCardWeek(
                 for (i in 0..6) {
                     val dateStr = DateUtils.daysAgo(6 - i)
                     val dayCount = habit.checkInCounts[dateStr] ?: 0
-                    val dayCompleted = dayCount >= habit.targetCount
 
                     HeatmapDot(
-                        isCompleted = dayCompleted,
+                        progress = dayCount.toFloat() / habit.targetCount.coerceAtLeast(1),
                         color = themeColor,
                         modifier = Modifier.padding(2.dp)
                     )
                 }
             }
 
-            Button(
+            CheckInButton(
+                isCompleted = isCompleted,
+                color = themeColor,
                 onClick = {
                     if (isCompleted) {
                         onCancelCheckIn(habit)
@@ -88,27 +105,12 @@ fun HabitCardWeek(
                     }
                 },
                 modifier = Modifier
-                    .width(100.dp)
-                    .height(36.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = if (isCompleted) Color(0xFFF44336) else themeColor
-                ),
-                shape = MaterialTheme.shapes.large,
+                    .width(104.dp)
+                    .height(48.dp),
+                iconSize = 16.dp,
+                fontSize = 12.sp,
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
-            ) {
-                Icon(
-                    imageVector = if (isCompleted) Icons.AutoMirrored.Filled.Undo else Icons.Default.Add,
-                    contentDescription = null,
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(2.dp))
-                Text(
-                    text = if (isCompleted) "Cancel" else "Check",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White
-                )
-            }
+            )
         }
     }
 }
@@ -131,7 +133,9 @@ fun HabitCardWeekPreview() {
                 )
             ),
             onCheckIn = {},
-            onCancelCheckIn = {}
+            onCancelCheckIn = {},
+            onClick = {},
+            onLongClick = {}
         )
     }
 }

@@ -1,10 +1,13 @@
 package org.wit.habit
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +56,7 @@ class StatsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         habitStore = HabitStore(requireContext())
+        applyInsets(view)
 
         val cal = Calendar.getInstance()
         currentYear = cal.get(Calendar.YEAR)
@@ -116,11 +120,35 @@ class StatsFragment : Fragment() {
         tabs.forEachIndexed { index, textView ->
             if (index == currentTab) {
                 textView.setBackgroundResource(selectedBg)
-                textView.setTextColor(requireContext().getColor(android.R.color.white))
+                textView.setTextColor(resolveThemeColor(com.google.android.material.R.attr.colorOnPrimary))
             } else {
                 textView.setBackgroundResource(normalBg)
-                textView.setTextColor(requireContext().getColor(android.R.color.black))
+                textView.setTextColor(resolveThemeColor(com.google.android.material.R.attr.colorOnSurface))
             }
+        }
+    }
+
+    private fun resolveThemeColor(attr: Int): Int {
+        val typedValue = TypedValue()
+        requireContext().theme.resolveAttribute(attr, typedValue, true)
+        return typedValue.data
+    }
+
+    private fun applyInsets(view: View) {
+        val initialLeft = view.paddingLeft
+        val initialTop = view.paddingTop
+        val initialRight = view.paddingRight
+        val initialBottom = view.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { target, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            target.setPadding(
+                initialLeft + bars.left,
+                initialTop + bars.top,
+                initialRight + bars.right,
+                initialBottom
+            )
+            insets
         }
     }
 

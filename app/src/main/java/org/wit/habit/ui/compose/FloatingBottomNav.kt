@@ -12,7 +12,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,8 +60,8 @@ fun FloatingBottomNav(
                             .size(52.dp)
                             .background(
                                 color = if (isSelected)
-                                    Color(0xFF4DB6AC).copy(alpha = 0.2f)
-                                else Color.Transparent,
+                                    MaterialTheme.colorScheme.primaryContainer
+                                else androidx.compose.ui.graphics.Color.Transparent,
                                 shape = CircleShape
                             )
                     ) {
@@ -70,8 +69,8 @@ fun FloatingBottomNav(
                             imageVector = tab.icon,
                             contentDescription = tab.title,
                             tint = if (isSelected)
-                                Color(0xFF26A69A)
-                            else Color(0xFF9E9E9E),
+                                MaterialTheme.colorScheme.onPrimaryContainer
+                            else MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(26.dp)
                         )
                     }
@@ -88,7 +87,7 @@ fun FloatingBottomNavPreview() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
+                .background(MaterialTheme.colorScheme.background)
         ) {
             Spacer(modifier = Modifier.weight(1f))
             FloatingBottomNav(

@@ -33,6 +33,8 @@ fun HabitCard(
             habit = habit,
             onCheckIn = callbacks.onCheckIn,
             onCancelCheckIn = callbacks.onCancelCheckIn,
+            onClick = callbacks.onClick,
+            onLongClick = callbacks.onLongClick,
             modifier = modifier
         )
         ViewMode.DAY -> HabitCardDay(

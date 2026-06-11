@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import org.wit.habit.helpers.HabitStore
 import org.wit.habit.helpers.ThemeStore
@@ -28,6 +30,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         habitStore = HabitStore(requireContext())
+        applyInsets(view)
 
         val tvAppName: TextView = view.findViewById(R.id.tvAppName)
         val tvVersion: TextView = view.findViewById(R.id.tvVersion)
@@ -66,6 +69,24 @@ class SettingsFragment : Fragment() {
                 .setMessage("${getString(R.string.app_name)}\nVersion $versionName")
                 .setPositiveButton("OK", null)
                 .show()
+        }
+    }
+
+    private fun applyInsets(view: View) {
+        val initialLeft = view.paddingLeft
+        val initialTop = view.paddingTop
+        val initialRight = view.paddingRight
+        val initialBottom = view.paddingBottom
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { target, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            target.setPadding(
+                initialLeft + bars.left,
+                initialTop + bars.top,
+                initialRight + bars.right,
+                initialBottom
+            )
+            insets
         }
     }
 

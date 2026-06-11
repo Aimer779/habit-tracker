@@ -1,7 +1,80 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Habit" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:colorBackground">?attr/colorSurface</item>
+        <item name="colorSurface">#1E1E1E</item>
+        <item name="colorOnSurface">#E6E1E5</item>
+        <item name="colorOnSurfaceVariant">#CAC4D0</item>
+        <item name="colorSurfaceVariant">#343038</item>
+        <item name="colorSurfaceContainerLow">#242226</item>
+        <item name="colorSurfaceContainerHighest">#343038</item>
+        <item name="colorOutline">#938F99</item>
+        <item name="colorOutlineVariant">#49454F</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Habit" parent="Base.Theme.Habit" />
+
+    <style name="Theme.Habit.Mint" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/mint_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">#254D48</item>
+        <item name="colorOnPrimaryContainer">#E6FFF9</item>
+        <item name="colorSecondary">@color/mint_primary</item>
+        <item name="colorSecondaryContainer">#254D48</item>
+        <item name="colorOnSecondaryContainer">#E6FFF9</item>
+    </style>
+
+    <style name="Theme.Habit.Blue" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/blue_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">#0F4A72</item>
+        <item name="colorOnPrimaryContainer">#D6EEFF</item>
+        <item name="colorSecondary">@color/blue_primary</item>
+        <item name="colorSecondaryContainer">#0F4A72</item>
+        <item name="colorOnSecondaryContainer">#D6EEFF</item>
+    </style>
+
+    <style name="Theme.Habit.Red" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/red_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">#6D2B2B</item>
+        <item name="colorOnPrimaryContainer">#FFDAD6</item>
+        <item name="colorSecondary">@color/red_primary</item>
+        <item name="colorSecondaryContainer">#6D2B2B</item>
+        <item name="colorOnSecondaryContainer">#FFDAD6</item>
+    </style>
+
+    <style name="Theme.Habit.Green" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/green_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">#2F4F32</item>
+        <item name="colorOnPrimaryContainer">#E3F6E5</item>
+        <item name="colorSecondary">@color/green_primary</item>
+        <item name="colorSecondaryContainer">#2F4F32</item>
+        <item name="colorOnSecondaryContainer">#E3F6E5</item>
+    </style>
+
+    <style name="Theme.Habit.Purple" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/purple_primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">#5A2D63</item>
+        <item name="colorOnPrimaryContainer">#F8D8FF</item>
+        <item name="colorSecondary">@color/purple_primary</item>
+        <item name="colorSecondaryContainer">#5A2D63</item>
+        <item name="colorOnSecondaryContainer">#F8D8FF</item>
+    </style>
+
+    <style name="Theme.Habit.Yellow" parent="Base.Theme.Habit">
+        <item name="colorPrimary">@color/yellow_primary</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimaryContainer">#5C4712</item>
+        <item name="colorOnPrimaryContainer">#FFECB3</item>
+        <item name="colorSecondary">@color/yellow_primary</item>
+        <item name="colorSecondaryContainer">#5C4712</item>
+        <item name="colorOnSecondaryContainer">#FFECB3</item>
     </style>
 </resources>

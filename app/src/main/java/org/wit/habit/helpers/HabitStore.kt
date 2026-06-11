@@ -100,6 +100,7 @@ class HabitStore(private val context: Context) {
         obj.put("createdDate", habit.createdDate)
         obj.put("icon", habit.icon)
         obj.put("color", habit.color)
+        obj.put("targetCount", habit.targetCount)
         val counts = JSONObject()
         habit.checkInCounts.forEach { (date, count) -> counts.put(date, count) }
         obj.put("checkInCounts", counts)
