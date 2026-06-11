@@ -2,14 +2,18 @@ package org.wit.habit.ui.compose
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import org.wit.habit.ui.theme.HabitTheme
 
 enum class FilterOption(val displayName: String) {
@@ -25,46 +29,80 @@ fun FilterDropdown(
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val hasActiveFilter = selectedFilter != FilterOption.ALL
 
     Box(modifier = modifier) {
-        Button(
+        FilterChip(
+            selected = hasActiveFilter,
             onClick = { expanded = true },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
+            label = {
+                Text(
+                    text = selectedFilter.displayName,
+                    style = MaterialTheme.typography.labelMedium
+                )
+            },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.FilterList,
+                    contentDescription = null,
+                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                )
+            },
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowDown,
+                    contentDescription = null,
+                    modifier = Modifier.size(FilterChipDefaults.IconSize)
+                )
+            },
+            colors = FilterChipDefaults.filterChipColors(
+                selectedContainerColor = MaterialTheme.colorScheme.primaryContainer,
+                selectedLabelColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                selectedTrailingIconColor = MaterialTheme.colorScheme.onPrimaryContainer
             ),
-            shape = MaterialTheme.shapes.large,
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            modifier = Modifier.height(40.dp)
-        ) {
-            Text(
-                text = selectedFilter.displayName,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                imageVector = Icons.Default.ArrowDropDown,
-                contentDescription = "Dropdown",
-                modifier = Modifier.size(20.dp)
-            )
-        }
+            modifier = Modifier
+                .height(40.dp)
+                .semantics {
+                    contentDescription = "Filter habits, current filter ${selectedFilter.displayName}"
+                }
+        )
 
         DropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            offset = DpOffset(x = 0.dp, y = 44.dp),
+            modifier = Modifier.width(196.dp)
         ) {
             FilterOption.entries.forEach { option ->
+                val selected = option == selectedFilter
+
                 DropdownMenuItem(
                     text = {
                         Text(
                             text = option.displayName,
-                            fontSize = 14.sp,
-                            color = if (option == selectedFilter)
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (selected) {
                                 MaterialTheme.colorScheme.primary
-                            else
+                            } else {
                                 MaterialTheme.colorScheme.onSurface
+                            }
                         )
+                    },
+                    leadingIcon = {
+                        Box(
+                            modifier = Modifier.size(24.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            if (selected) {
+                                Icon(
+                                    imageVector = Icons.Default.Check,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                        }
                     },
                     onClick = {
                         onFilterSelected(option)
@@ -83,10 +121,15 @@ fun FilterDropdownPreview() {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             FilterDropdown(
                 selectedFilter = FilterOption.ALL,
+                onFilterSelected = {}
+            )
+            FilterDropdown(
+                selectedFilter = FilterOption.CHECKED_IN,
                 onFilterSelected = {}
             )
         }
