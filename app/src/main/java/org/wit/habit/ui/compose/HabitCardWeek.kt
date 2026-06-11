@@ -89,7 +89,12 @@ fun HabitCardWeek(
                     HeatmapDot(
                         progress = dayCount.toFloat() / habit.targetCount.coerceAtLeast(1),
                         color = themeColor,
-                        modifier = Modifier.padding(2.dp)
+                        modifier = Modifier.padding(2.dp),
+                        contentDescription = heatmapDotContentDescription(
+                            date = dateStr,
+                            count = dayCount,
+                            targetCount = habit.targetCount
+                        )
                     )
                 }
             }

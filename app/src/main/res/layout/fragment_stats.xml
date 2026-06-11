@@ -23,45 +23,40 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp" />
 
-        <LinearLayout
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/periodToggleGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/bg_tab_container"
-            android:padding="4dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            app:checkedButton="@id/tabMonth"
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/tabWeek"
                 android:layout_width="80dp"
-                android:layout_height="36dp"
+                android:layout_height="40dp"
                 android:text="Week"
-                android:gravity="center"
                 android:textSize="14sp"
-                android:textColor="?attr/colorOnSurface"
-                android:background="@drawable/bg_tab_normal" />
+                style="@style/Widget.Material3.Button.OutlinedButton" />
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/tabMonth"
                 android:layout_width="80dp"
-                android:layout_height="36dp"
+                android:layout_height="40dp"
                 android:text="Month"
-                android:gravity="center"
                 android:textSize="14sp"
-                android:textColor="?attr/colorOnPrimary"
-                android:background="@drawable/bg_tab_selected" />
+                style="@style/Widget.Material3.Button.OutlinedButton" />
 
-            <TextView
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/tabYear"
                 android:layout_width="80dp"
-                android:layout_height="36dp"
+                android:layout_height="40dp"
                 android:text="Year"
-                android:gravity="center"
                 android:textSize="14sp"
-                android:textColor="?attr/colorOnSurface"
-                android:background="@drawable/bg_tab_normal" />
-        </LinearLayout>
+                style="@style/Widget.Material3.Button.OutlinedButton" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
         <LinearLayout
             android:layout_width="wrap_content"

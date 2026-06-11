@@ -13,6 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.wit.habit.ui.theme.HabitTheme
@@ -58,6 +61,10 @@ fun FloatingBottomNav(
                         onClick = { onTabSelected(tab) },
                         modifier = Modifier
                             .size(52.dp)
+                            .semantics {
+                                contentDescription = "${tab.title} tab"
+                                selected = isSelected
+                            }
                             .background(
                                 color = if (isSelected)
                                     MaterialTheme.colorScheme.primaryContainer
@@ -67,7 +74,7 @@ fun FloatingBottomNav(
                     ) {
                         Icon(
                             imageVector = tab.icon,
-                            contentDescription = tab.title,
+                            contentDescription = null,
                             tint = if (isSelected)
                                 MaterialTheme.colorScheme.onPrimaryContainer
                             else MaterialTheme.colorScheme.onSurfaceVariant,

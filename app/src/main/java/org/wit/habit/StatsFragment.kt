@@ -1,7 +1,6 @@
 package org.wit.habit
 
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import org.wit.habit.helpers.DateUtils
 import org.wit.habit.helpers.HabitStore
 import org.wit.habit.model.Habit
+import com.google.android.material.button.MaterialButtonToggleGroup
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -24,9 +24,7 @@ class StatsFragment : Fragment() {
     private lateinit var tvPeriod: TextView
     private lateinit var btnPrev: TextView
     private lateinit var btnNext: TextView
-    private lateinit var tabWeek: TextView
-    private lateinit var tabMonth: TextView
-    private lateinit var tabYear: TextView
+    private lateinit var periodToggleGroup: MaterialButtonToggleGroup
     private lateinit var tvTotalCheckIns: TextView
     private lateinit var tvCurrentStreak: TextView
     private lateinit var tvLongestStreak: TextView
@@ -79,9 +77,7 @@ class StatsFragment : Fragment() {
         tvPeriod = view.findViewById(R.id.tvPeriod)
         btnPrev = view.findViewById(R.id.btnPrev)
         btnNext = view.findViewById(R.id.btnNext)
-        tabWeek = view.findViewById(R.id.tabWeek)
-        tabMonth = view.findViewById(R.id.tabMonth)
-        tabYear = view.findViewById(R.id.tabYear)
+        periodToggleGroup = view.findViewById(R.id.periodToggleGroup)
         tvTotalCheckIns = view.findViewById(R.id.tvTotalCheckIns)
         tvCurrentStreak = view.findViewById(R.id.tvCurrentStreak)
         tvLongestStreak = view.findViewById(R.id.tvLongestStreak)
@@ -92,17 +88,26 @@ class StatsFragment : Fragment() {
     }
 
     private fun setupListeners() {
-        tabWeek.setOnClickListener { switchTab(TAB_WEEK) }
-        tabMonth.setOnClickListener { switchTab(TAB_MONTH) }
-        tabYear.setOnClickListener { switchTab(TAB_YEAR) }
+        periodToggleGroup.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                switchTab(
+                    when (checkedId) {
+                        R.id.tabWeek -> TAB_WEEK
+                        R.id.tabYear -> TAB_YEAR
+                        else -> TAB_MONTH
+                    }
+                )
+            }
+        }
 
         btnPrev.setOnClickListener { navigatePeriod(-1) }
         btnNext.setOnClickListener { navigatePeriod(1) }
     }
 
     private fun switchTab(tab: Int) {
+        if (currentTab == tab) return
         currentTab = tab
-        updateTabStyles()
+        updateTabSelection()
 
         val cal = Calendar.getInstance()
         currentYear = cal.get(Calendar.YEAR)
@@ -112,26 +117,15 @@ class StatsFragment : Fragment() {
         updateUI()
     }
 
-    private fun updateTabStyles() {
-        val tabs = listOf(tabWeek, tabMonth, tabYear)
-        val selectedBg = R.drawable.bg_tab_selected
-        val normalBg = R.drawable.bg_tab_normal
-
-        tabs.forEachIndexed { index, textView ->
-            if (index == currentTab) {
-                textView.setBackgroundResource(selectedBg)
-                textView.setTextColor(resolveThemeColor(com.google.android.material.R.attr.colorOnPrimary))
-            } else {
-                textView.setBackgroundResource(normalBg)
-                textView.setTextColor(resolveThemeColor(com.google.android.material.R.attr.colorOnSurface))
-            }
+    private fun updateTabSelection() {
+        val checkedId = when (currentTab) {
+            TAB_WEEK -> R.id.tabWeek
+            TAB_YEAR -> R.id.tabYear
+            else -> R.id.tabMonth
         }
-    }
-
-    private fun resolveThemeColor(attr: Int): Int {
-        val typedValue = TypedValue()
-        requireContext().theme.resolveAttribute(attr, typedValue, true)
-        return typedValue.data
+        if (periodToggleGroup.checkedButtonId != checkedId) {
+            periodToggleGroup.check(checkedId)
+        }
     }
 
     private fun applyInsets(view: View) {

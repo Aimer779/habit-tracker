@@ -42,6 +42,8 @@ class AddHabitActivity : BaseActivity() {
         editTargetCount = findViewById(R.id.editTargetCount)
         tvSelectedIcon = findViewById(R.id.tvSelectedIcon)
         viewSelectedColor = findViewById(R.id.viewSelectedColor)
+        findViewById<Button>(R.id.btnTargetMinus).contentDescription = "Decrease daily target"
+        findViewById<Button>(R.id.btnTargetPlus).contentDescription = "Increase daily target"
 
         val habitId = intent.getLongExtra("habit_id", -1L)
         if (habitId != -1L) {
@@ -60,6 +62,7 @@ class AddHabitActivity : BaseActivity() {
                 findViewById<Button>(R.id.btnSave).text = "Update"
             }
         }
+        updateSelectedOptionDescriptions()
 
         tvSelectedIcon.setOnClickListener {
             showIconPicker()
@@ -145,6 +148,7 @@ class AddHabitActivity : BaseActivity() {
             grid.addView(createIconOption(icon, icon == selectedIcon) {
                 selectedIcon = icon
                 tvSelectedIcon.text = selectedIcon
+                updateSelectedOptionDescriptions()
                 dialog.dismiss()
             })
         }
@@ -165,6 +169,7 @@ class AddHabitActivity : BaseActivity() {
                 viewSelectedColor.setBackgroundColor(
                     ContextCompat.getColor(this, HabitColors.getColorRes(selectedColor))
                 )
+                updateSelectedOptionDescriptions()
                 dialog.dismiss()
             })
         }
@@ -181,6 +186,12 @@ class AddHabitActivity : BaseActivity() {
 
     private fun createIconOption(icon: String, selected: Boolean, onClick: () -> Unit): View {
         val card = pickerCard(selected)
+        card.contentDescription = if (selected) {
+            "Icon $icon, selected"
+        } else {
+            "Icon $icon"
+        }
+        card.isSelected = selected
         val text = TextView(this).apply {
             text = icon
             textSize = 28f
@@ -198,6 +209,12 @@ class AddHabitActivity : BaseActivity() {
         onClick: () -> Unit
     ): View {
         val card = pickerCard(selected)
+        card.contentDescription = if (selected) {
+            "$label color, selected"
+        } else {
+            "$label color"
+        }
+        card.isSelected = selected
         val container = android.widget.LinearLayout(this).apply {
             orientation = android.widget.LinearLayout.VERTICAL
             gravity = Gravity.CENTER
@@ -220,6 +237,16 @@ class AddHabitActivity : BaseActivity() {
         card.addView(container, FrameLayout.LayoutParams(dp(72), dp(72)))
         card.setOnClickListener { onClick() }
         return card
+    }
+
+    private fun updateSelectedOptionDescriptions() {
+        tvSelectedIcon.contentDescription = "Selected icon $selectedIcon. Double tap to change icon."
+        viewSelectedColor.contentDescription = "Selected color ${selectedColorLabel()}. Double tap to change color."
+    }
+
+    private fun selectedColorLabel(): String {
+        return HabitColors.colorOptions.firstOrNull { (key, _) -> key == selectedColor }?.second
+            ?: selectedColor
     }
 
     private fun pickerCard(selected: Boolean): MaterialCardView {
