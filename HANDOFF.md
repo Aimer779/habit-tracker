@@ -89,16 +89,18 @@ Important files:
 - Add/Edit Habit has a `Daily Target` stepper.
 - Existing habits load saved target count in edit mode.
 - New and edited habits coerce `targetCount` to at least `1`.
-- Add/Edit inputs use Material `TextInputLayout` / `TextInputEditText`.
-- Icon picker is now an emoji grid.
-- Color picker is now a swatch grid with labels and selected-state outline.
-- Add Habit applies edge-to-edge insets.
+- Add/Edit UI is now implemented in Jetpack Compose with Material 3.
+- Form fields are grouped in rounded cards (Name/Description, Appearance, Daily Target).
+- Icon picker is an inline 4-column emoji grid with selected-state highlight.
+- Color picker is an inline row of circular color chips with checkmark selection.
+- Daily target uses a compact stepper with `+/-` icon buttons.
+- Add Habit applies edge-to-edge insets via Compose Scaffold.
 
 Important files:
 
 - `app/src/main/java/org/wit/habit/helpers/HabitStore.kt`
 - `app/src/main/java/org/wit/habit/AddHabitActivity.kt`
-- `app/src/main/res/layout/activity_add_habit.xml`
+- `app/src/main/java/org/wit/habit/ui/compose/AddHabitScreen.kt`
 
 ## Review Notes
 
