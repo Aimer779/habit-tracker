@@ -145,22 +145,28 @@ fun HabitCardMonth(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            CheckInButton(
-                isCompleted = isCompleted,
-                color = themeColor,
-                onClick = {
-                    if (isCompleted) {
-                        onCancelCheckIn(habit)
-                    } else {
-                        onCheckIn(habit)
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp),
-                iconSize = 18.dp,
-                fontSize = 14.sp
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                CheckInButton(
+                    isCompleted = isCompleted,
+                    color = themeColor,
+                    enabled = !isCompleted,
+                    onClick = { onCheckIn(habit) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(40.dp),
+                    iconSize = 18.dp,
+                    fontSize = 14.sp
+                )
+                UndoCheckInButton(
+                    onClick = { onCancelCheckIn(habit) },
+                    enabled = count > 0,
+                    modifier = Modifier
+                        .size(40.dp)
+                )
+            }
         }
     }
 }

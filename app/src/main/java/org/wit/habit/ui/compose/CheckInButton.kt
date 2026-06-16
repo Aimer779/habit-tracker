@@ -38,6 +38,7 @@ fun CheckInButton(
     color: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     iconSize: Dp = 18.dp,
     fontSize: TextUnit = TextUnit.Unspecified,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding
@@ -57,6 +58,7 @@ fun CheckInButton(
         OutlinedButton(
             onClick = clickWithFeedback,
             modifier = modifier,
+            enabled = enabled,
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = MaterialTheme.colorScheme.primary
             ),
@@ -73,6 +75,7 @@ fun CheckInButton(
         Button(
             onClick = clickWithFeedback,
             modifier = modifier,
+            enabled = enabled,
             colors = ButtonDefaults.buttonColors(
                 containerColor = animatedColor,
                 contentColor = MaterialTheme.colorScheme.onPrimary

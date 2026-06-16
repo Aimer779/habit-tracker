@@ -121,19 +121,23 @@ fun HabitCardWeek(
             CheckInButton(
                 isCompleted = isCompleted,
                 color = themeColor,
-                onClick = {
-                    if (isCompleted) {
-                        onCancelCheckIn(habit)
-                    } else {
-                        onCheckIn(habit)
-                    }
-                },
+                enabled = !isCompleted,
+                onClick = { onCheckIn(habit) },
                 modifier = Modifier
                     .width(104.dp)
                     .height(48.dp),
                 iconSize = 16.dp,
                 fontSize = 12.sp,
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+            )
+
+            Spacer(modifier = Modifier.width(4.dp))
+
+            UndoCheckInButton(
+                onClick = { onCancelCheckIn(habit) },
+                enabled = count > 0,
+                modifier = Modifier
+                    .size(48.dp)
             )
         }
     }

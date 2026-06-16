@@ -89,22 +89,28 @@ fun HabitCardDay(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            CheckInButton(
-                isCompleted = isCompleted,
-                color = themeColor,
-                onClick = {
-                    if (isCompleted) {
-                        onCancelCheckIn(habit)
-                    } else {
-                        onCheckIn(habit)
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                iconSize = 20.dp,
-                fontSize = 16.sp
-            )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                CheckInButton(
+                    isCompleted = isCompleted,
+                    color = themeColor,
+                    enabled = !isCompleted,
+                    onClick = { onCheckIn(habit) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(48.dp),
+                    iconSize = 20.dp,
+                    fontSize = 16.sp
+                )
+                UndoCheckInButton(
+                    onClick = { onCancelCheckIn(habit) },
+                    enabled = count > 0,
+                    modifier = Modifier
+                        .size(48.dp)
+                )
+            }
         }
     }
 }
@@ -119,7 +125,7 @@ fun HabitCardDayPreview() {
                 name = "Read Books",
                 icon = "📖",
                 color = "blue",
-                targetCount = 1,
+                targetCount = 3,
                 checkInCounts = mutableMapOf(DateUtils.today() to 1)
             ),
             onCheckIn = {},
