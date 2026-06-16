@@ -48,4 +48,33 @@ object DateUtils {
         cal.add(Calendar.DAY_OF_YEAR, days)
         return formatter.format(cal.time)
     }
+
+    // ---- Current-month calendar helpers (month view) ----
+
+    fun currentYear(): Int = Calendar.getInstance().get(Calendar.YEAR)
+
+    fun currentMonth(): Int = Calendar.getInstance().get(Calendar.MONTH) + 1 // 1..12
+
+    fun daysInMonth(year: Int, month: Int): Int {
+        val cal = Calendar.getInstance()
+        cal.set(year, month - 1, 1)
+        return cal.getActualMaximum(Calendar.DAY_OF_MONTH)
+    }
+
+    /**
+     * 0 = Monday ... 6 = Sunday, so the value equals the number of leading empty
+     * cells needed in a Monday-first calendar grid.
+     */
+    fun firstWeekdayOfMonth(year: Int, month: Int): Int {
+        val cal = Calendar.getInstance()
+        cal.set(year, month - 1, 1)
+        val dow = cal.get(Calendar.DAY_OF_WEEK) // 1=Sunday ... 7=Saturday
+        return (dow + 5) % 7 // map Sunday(1)→6, Monday(2)→0, ..., Saturday(7)→5
+    }
+
+    fun dateOfMonth(year: Int, month: Int, day: Int): String {
+        val cal = Calendar.getInstance()
+        cal.set(year, month - 1, day)
+        return formatter.format(cal.time)
+    }
 }

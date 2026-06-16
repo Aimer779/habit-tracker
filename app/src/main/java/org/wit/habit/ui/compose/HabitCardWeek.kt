@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -78,26 +79,44 @@ fun HabitCardWeek(
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(2.dp),
-                modifier = Modifier.padding(end = 8.dp)
-            ) {
-                for (i in 0..6) {
-                    val dateStr = DateUtils.daysAgo(6 - i)
-                    val dayCount = habit.checkInCounts[dateStr] ?: 0
+            // Current week (Mon-Sun) heatmap with weekday labels above the cells
+            val weekStart = DateUtils.getWeekStart(DateUtils.today())
+            val today = DateUtils.today()
+            val weekLabels = listOf("M", "T", "W", "T", "F", "S", "S")
+            val cellSpacing = 4.dp
 
-                    HeatmapDot(
-                        progress = dayCount.toFloat() / habit.targetCount.coerceAtLeast(1),
-                        color = themeColor,
-                        modifier = Modifier.padding(2.dp),
-                        contentDescription = heatmapDotContentDescription(
-                            date = dateStr,
-                            count = dayCount,
-                            targetCount = habit.targetCount
+            Column(verticalArrangement = Arrangement.spacedBy(cellSpacing)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(cellSpacing)) {
+                    weekLabels.forEach { label ->
+                        Text(
+                            text = label,
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(16.dp),
+                            textAlign = TextAlign.Center
                         )
-                    )
+                    }
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(cellSpacing)) {
+                    for (i in 0..6) {
+                        val dateStr = DateUtils.addDays(weekStart, i)
+                        val dayCount = habit.checkInCounts[dateStr] ?: 0
+
+                        HeatmapCell(
+                            level = heatLevel(dayCount, habit.targetCount),
+                            color = themeColor,
+                            isToday = dateStr == today,
+                            contentDescription = heatmapCellContentDescription(
+                                date = dateStr,
+                                count = dayCount,
+                                targetCount = habit.targetCount
+                            )
+                        )
+                    }
                 }
             }
+
+            Spacer(modifier = Modifier.width(8.dp))
 
             CheckInButton(
                 isCompleted = isCompleted,
@@ -124,6 +143,11 @@ fun HabitCardWeek(
 @Composable
 fun HabitCardWeekPreview() {
     HabitTheme {
+        val weekStart = DateUtils.getWeekStart(DateUtils.today())
+        val counts = mutableMapOf<String, Int>()
+        for (i in 0..6) {
+            counts[DateUtils.addDays(weekStart, i)] = if (i % 2 == 0) 1 else 0
+        }
         HabitCardWeek(
             habit = Habit(
                 id = 1,
@@ -131,11 +155,7 @@ fun HabitCardWeekPreview() {
                 icon = "🏃",
                 color = "green",
                 targetCount = 1,
-                checkInCounts = mutableMapOf(
-                    DateUtils.daysAgo(0) to 1,
-                    DateUtils.daysAgo(2) to 1,
-                    DateUtils.daysAgo(4) to 1
-                )
+                checkInCounts = counts
             ),
             onCheckIn = {},
             onCancelCheckIn = {},

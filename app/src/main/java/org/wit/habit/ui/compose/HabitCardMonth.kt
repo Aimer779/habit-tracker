@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -79,30 +80,65 @@ fun HabitCardMonth(
                 Spacer(modifier = Modifier.height(8.dp))
             }
 
-            // Heatmap Grid: 7 columns x 5 rows = 35 dots (last 35 days)
+            // Current-month calendar grid (Monday-first)
+            val year = DateUtils.currentYear()
+            val month = DateUtils.currentMonth()
+            val daysInMonth = DateUtils.daysInMonth(year, month)
+            val leadingBlanks = DateUtils.firstWeekdayOfMonth(year, month)
+            val today = DateUtils.today()
+            val cellSpacing = 4.dp
+            val weekHeaders = listOf("M", "T", "W", "T", "F", "S", "S")
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                for (row in 0..4) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
-                    ) {
-                        for (col in 0..6) {
-                            val dayIndex = 34 - (row * 7 + col)
-                            val dateStr = DateUtils.daysAgo(dayIndex)
-                            val dayCount = habit.checkInCounts[dateStr] ?: 0
+                // Weekday header row
+                Row(horizontalArrangement = Arrangement.spacedBy(cellSpacing)) {
+                    weekHeaders.forEach { label ->
+                        Text(
+                            text = label,
+                            fontSize = 10.sp,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.size(16.dp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
 
-                            HeatmapDot(
-                                progress = dayCount.toFloat() / habit.targetCount.coerceAtLeast(1),
-                                color = themeColor,
-                                modifier = Modifier.padding(2.dp),
-                                contentDescription = heatmapDotContentDescription(
-                                    date = dateStr,
-                                    count = dayCount,
-                                    targetCount = habit.targetCount
+                Spacer(modifier = Modifier.height(4.dp))
+
+                // Day cells: leading blanks + 1..daysInMonth, wrapped every 7
+                val totalSlots = leadingBlanks + daysInMonth
+                val rows = (totalSlots + 6) / 7
+                for (row in 0 until rows) {
+                    Row(horizontalArrangement = Arrangement.spacedBy(cellSpacing)) {
+                        for (col in 0..6) {
+                            val slot = row * 7 + col
+                            if (slot < leadingBlanks || slot >= totalSlots) {
+                                // Out-of-month placeholder, keeps columns aligned
+                                androidx.compose.foundation.layout.Box(
+                                    modifier = Modifier.size(16.dp)
                                 )
-                            )
+                            } else {
+                                val day = slot - leadingBlanks + 1
+                                val dateStr = DateUtils.dateOfMonth(year, month, day)
+                                val dayCount = habit.checkInCounts[dateStr] ?: 0
+
+                                HeatmapCell(
+                                    level = heatLevel(dayCount, habit.targetCount),
+                                    color = themeColor,
+                                    isToday = dateStr == today,
+                                    contentDescription = heatmapCellContentDescription(
+                                        date = dateStr,
+                                        count = dayCount,
+                                        targetCount = habit.targetCount
+                                    )
+                                )
+                            }
                         }
+                    }
+                    if (row < rows - 1) {
+                        Spacer(modifier = Modifier.height(cellSpacing))
                     }
                 }
             }
@@ -133,6 +169,18 @@ fun HabitCardMonth(
 @Composable
 fun HabitCardMonthPreview() {
     HabitTheme {
+        val year = DateUtils.currentYear()
+        val month = DateUtils.currentMonth()
+        val days = DateUtils.daysInMonth(year, month)
+        val counts = mutableMapOf<String, Int>()
+        for (day in 1..days) {
+            // Spread a mix of empty / partial / complete across the month
+            counts[DateUtils.dateOfMonth(year, month, day)] = when (day % 5) {
+                0 -> 1
+                1, 2 -> 0
+                else -> 1
+            }
+        }
         HabitCardMonth(
             habit = Habit(
                 id = 1,
@@ -140,13 +188,7 @@ fun HabitCardMonthPreview() {
                 icon = "🧘",
                 color = "purple",
                 targetCount = 1,
-                checkInCounts = mutableMapOf(
-                    DateUtils.today() to 1,
-                    DateUtils.daysAgo(1) to 1,
-                    DateUtils.daysAgo(3) to 1,
-                    DateUtils.daysAgo(7) to 1,
-                    DateUtils.daysAgo(14) to 1
-                )
+                checkInCounts = counts
             ),
             onCheckIn = {},
             onCancelCheckIn = {},

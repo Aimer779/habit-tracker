@@ -74,6 +74,19 @@ fun HabitCardDay(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            LinearProgressIndicator(
+                progress = {
+                    (count.toFloat() / habit.targetCount.coerceAtLeast(1)).coerceIn(0f, 1f)
+                },
+                color = themeColor,
+                trackColor = MaterialTheme.colorScheme.surfaceVariant,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp)
+            )
+
             Spacer(modifier = Modifier.height(16.dp))
 
             CheckInButton(
