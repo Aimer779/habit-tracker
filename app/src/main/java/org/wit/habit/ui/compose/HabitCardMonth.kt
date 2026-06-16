@@ -71,15 +71,6 @@ fun HabitCardMonth(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            if (habit.targetCount > 1) {
-                Text(
-                    text = "Today: $count/${habit.targetCount}",
-                    fontSize = 12.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
             // Current-month calendar grid (Monday-first)
             val year = DateUtils.currentYear()
             val month = DateUtils.currentMonth()

@@ -123,12 +123,12 @@ fun HabitCardWeek(
                 color = themeColor,
                 enabled = !isCompleted,
                 onClick = { onCheckIn(habit) },
+                showText = false,
                 modifier = Modifier
-                    .width(104.dp)
-                    .height(48.dp),
-                iconSize = 16.dp,
+                    .size(48.dp),
+                iconSize = 20.dp,
                 fontSize = 12.sp,
-                contentPadding = PaddingValues(horizontal = 8.dp, vertical = 0.dp)
+                contentPadding = PaddingValues(0.dp)
             )
 
             Spacer(modifier = Modifier.width(4.dp))

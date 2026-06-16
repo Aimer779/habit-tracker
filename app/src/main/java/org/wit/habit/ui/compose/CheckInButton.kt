@@ -39,6 +39,7 @@ fun CheckInButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    showText: Boolean = true,
     iconSize: Dp = 18.dp,
     fontSize: TextUnit = TextUnit.Unspecified,
     contentPadding: PaddingValues = ButtonDefaults.ContentPadding
@@ -67,6 +68,7 @@ fun CheckInButton(
         ) {
             CheckInButtonContent(
                 isCompleted = true,
+                showText = showText,
                 iconSize = iconSize,
                 fontSize = fontSize
             )
@@ -85,6 +87,7 @@ fun CheckInButton(
         ) {
             CheckInButtonContent(
                 isCompleted = false,
+                showText = showText,
                 iconSize = iconSize,
                 fontSize = fontSize
             )
@@ -95,6 +98,7 @@ fun CheckInButton(
 @Composable
 private fun CheckInButtonContent(
     isCompleted: Boolean,
+    showText: Boolean,
     iconSize: Dp,
     fontSize: TextUnit
 ) {
@@ -111,15 +115,17 @@ private fun CheckInButtonContent(
 
             Icon(
                 imageVector = icon,
-                contentDescription = null,
+                contentDescription = label,
                 modifier = Modifier.size(iconSize)
             )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = label,
-                fontSize = fontSize,
-                fontWeight = FontWeight.Bold
-            )
+            if (showText) {
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = label,
+                    fontSize = fontSize,
+                    fontWeight = FontWeight.Bold
+                )
+            }
         }
     }
 }
