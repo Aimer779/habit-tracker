@@ -10,10 +10,13 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.card.MaterialCardView
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import org.wit.habit.helpers.DateUtils
 import org.wit.habit.helpers.HabitStore
 import org.wit.habit.model.Habit
-import com.google.android.material.button.MaterialButtonToggleGroup
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -234,7 +237,9 @@ class StatsFragment : Fragment() {
                 if (date in firstDay..lastDay) {
                     totalCheckIns += count
                     activeDaysSet.add(date)
-                    monthCount += count
+                    if (count >= habit.targetCount) {
+                        monthCount++
+                    }
                 }
             }
             habitMonthCounts[habit.id] = monthCount
@@ -247,7 +252,6 @@ class StatsFragment : Fragment() {
 
         val rankings = habits
             .filter { (habitMonthCounts[it.id] ?: 0) > 0 }
-            .sortedByDescending { habitMonthCounts[it.id] ?: 0 }
             .map {
                 RankItem(
                     icon = it.icon,
@@ -255,8 +259,10 @@ class StatsFragment : Fragment() {
                     count = habitMonthCounts[it.id] ?: 0
                 )
             }
+            .sortedWith(compareByDescending<RankItem> { it.count }.thenBy { it.name })
+        val maxCount = rankings.maxOfOrNull { it.count } ?: 0
 
-        rvRankings.adapter = RankAdapter(rankings)
+        rvRankings.adapter = RankAdapter(rankings, maxCount)
     }
 
     private fun loadWeekStats(habits: List<Habit>, today: String) {
@@ -272,7 +278,9 @@ class StatsFragment : Fragment() {
                 if (date in currentWeekStart..weekEnd) {
                     totalCheckIns += count
                     activeDaysSet.add(date)
-                    weekCount += count
+                    if (count >= habit.targetCount) {
+                        weekCount++
+                    }
                 }
             }
             habitWeekCounts[habit.id] = weekCount
@@ -285,7 +293,6 @@ class StatsFragment : Fragment() {
 
         val rankings = habits
             .filter { (habitWeekCounts[it.id] ?: 0) > 0 }
-            .sortedByDescending { habitWeekCounts[it.id] ?: 0 }
             .map {
                 RankItem(
                     icon = it.icon,
@@ -293,8 +300,10 @@ class StatsFragment : Fragment() {
                     count = habitWeekCounts[it.id] ?: 0
                 )
             }
+            .sortedWith(compareByDescending<RankItem> { it.count }.thenBy { it.name })
+        val maxCount = rankings.maxOfOrNull { it.count } ?: 0
 
-        rvRankings.adapter = RankAdapter(rankings)
+        rvRankings.adapter = RankAdapter(rankings, maxCount)
     }
 
     private fun loadYearStats(habits: List<Habit>, today: String) {
@@ -310,7 +319,9 @@ class StatsFragment : Fragment() {
                 if (date.startsWith(yearPrefix)) {
                     totalCheckIns += count
                     activeDaysSet.add(date)
-                    yearCount += count
+                    if (count >= habit.targetCount) {
+                        yearCount++
+                    }
                 }
             }
             habitYearCounts[habit.id] = yearCount
@@ -323,7 +334,6 @@ class StatsFragment : Fragment() {
 
         val rankings = habits
             .filter { (habitYearCounts[it.id] ?: 0) > 0 }
-            .sortedByDescending { habitYearCounts[it.id] ?: 0 }
             .map {
                 RankItem(
                     icon = it.icon,
@@ -331,8 +341,10 @@ class StatsFragment : Fragment() {
                     count = habitYearCounts[it.id] ?: 0
                 )
             }
+            .sortedWith(compareByDescending<RankItem> { it.count }.thenBy { it.name })
+        val maxCount = rankings.maxOfOrNull { it.count } ?: 0
 
-        rvRankings.adapter = RankAdapter(rankings)
+        rvRankings.adapter = RankAdapter(rankings, maxCount)
     }
 
     private fun calculateCurrentStreak(habits: List<Habit>, today: String): Int {
@@ -398,14 +410,18 @@ class StatsFragment : Fragment() {
 
     data class RankItem(val icon: String, val name: String, val count: Int)
 
-    inner class RankAdapter(private val items: List<RankItem>) :
-        RecyclerView.Adapter<RankAdapter.ViewHolder>() {
+    inner class RankAdapter(
+        private val items: List<RankItem>,
+        private val maxCount: Int
+    ) : RecyclerView.Adapter<RankAdapter.ViewHolder>() {
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            val cardRankBadge: MaterialCardView = itemView.findViewById(R.id.cardRankBadge)
             val tvRank: TextView = itemView.findViewById(R.id.tvRank)
             val tvHabitIcon: TextView = itemView.findViewById(R.id.tvHabitIcon)
             val tvHabitName: TextView = itemView.findViewById(R.id.tvHabitName)
             val tvCheckInCount: TextView = itemView.findViewById(R.id.tvCheckInCount)
+            val progressBar: LinearProgressIndicator = itemView.findViewById(R.id.progressBar)
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -416,12 +432,45 @@ class StatsFragment : Fragment() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val item = items[position]
-            holder.tvRank.text = (position + 1).toString()
+            val rank = position + 1
+            val context = holder.itemView.context
+
             holder.tvHabitIcon.text = item.icon
             holder.tvHabitName.text = item.name
-            holder.tvCheckInCount.text = "${item.count} check-ins"
+            holder.tvCheckInCount.text = "${item.count} days"
+
+            val progress = if (maxCount > 0) item.count.toFloat() / maxCount else 0f
+            holder.progressBar.setProgress((progress * 100).toInt(), false)
+
+            when (rank) {
+                1 -> {
+                    holder.tvRank.text = "🥇"
+                    holder.cardRankBadge.setCardBackgroundColor(
+                        MaterialColors.getColor(context, com.google.android.material.R.attr.colorPrimaryContainer, 0)
+                    )
+                }
+                2 -> {
+                    holder.tvRank.text = "🥈"
+                    holder.cardRankBadge.setCardBackgroundColor(
+                        MaterialColors.getColor(context, com.google.android.material.R.attr.colorSecondaryContainer, 0)
+                    )
+                }
+                3 -> {
+                    holder.tvRank.text = "🥉"
+                    holder.cardRankBadge.setCardBackgroundColor(
+                        MaterialColors.getColor(context, com.google.android.material.R.attr.colorTertiaryContainer, 0)
+                    )
+                }
+                else -> {
+                    holder.tvRank.text = rank.toString()
+                    holder.cardRankBadge.setCardBackgroundColor(
+                        MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurfaceVariant, 0)
+                    )
+                }
+            }
         }
 
         override fun getItemCount() = items.size
     }
+
 }
