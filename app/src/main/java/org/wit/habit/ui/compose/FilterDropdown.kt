@@ -2,12 +2,10 @@ package org.wit.habit.ui.compose
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -71,8 +69,8 @@ fun FilterDropdown(
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            offset = DpOffset(x = 0.dp, y = 44.dp),
-            modifier = Modifier.width(196.dp)
+            offset = DpOffset(x = 8.dp, y = 96.dp),
+            modifier = Modifier.width(180.dp)
         ) {
             FilterOption.entries.forEach { option ->
                 val selected = option == selectedFilter
@@ -88,21 +86,6 @@ fun FilterDropdown(
                                 MaterialTheme.colorScheme.onSurface
                             }
                         )
-                    },
-                    leadingIcon = {
-                        Box(
-                            modifier = Modifier.size(24.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            if (selected) {
-                                Icon(
-                                    imageVector = Icons.Default.Check,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(18.dp)
-                                )
-                            }
-                        }
                     },
                     onClick = {
                         onFilterSelected(option)
