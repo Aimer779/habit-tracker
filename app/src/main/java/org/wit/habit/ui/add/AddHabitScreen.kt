@@ -171,12 +171,12 @@ fun AddHabitScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            items(HabitColors.colorOptions) { (key, label) ->
+                            items(HabitColors.colorOptions) { option ->
                                 ColorOption(
-                                    colorKey = key,
-                                    label = label,
-                                    selected = key == selectedColor,
-                                    onClick = { selectedColor = key }
+                                    colorKey = option.key,
+                                    label = stringResource(option.labelRes),
+                                    selected = option.key == selectedColor,
+                                    onClick = { selectedColor = option.key }
                                 )
                             }
                         }

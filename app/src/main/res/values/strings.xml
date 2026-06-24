@@ -55,6 +55,24 @@
     <string name="by_completed_days">By Completed Days</string>
     <string name="rank_days">%1$d days</string>
 
+    <!-- Theme options -->
+    <string name="theme_mint">Mint</string>
+    <string name="theme_blue">Sky Blue</string>
+    <string name="theme_red">Vibrant Red</string>
+    <string name="theme_green">Nature Green</string>
+    <string name="theme_purple">Dream Purple</string>
+    <string name="theme_yellow">Sunny Yellow</string>
+
+    <!-- Habit color options -->
+    <string name="color_blue">Blue</string>
+    <string name="color_orange">Orange</string>
+    <string name="color_green">Green</string>
+    <string name="color_pink">Pink</string>
+    <string name="color_purple">Purple</string>
+    <string name="color_teal">Teal</string>
+    <string name="color_yellow">Yellow</string>
+    <string name="color_red">Red</string>
+
     <!-- Settings -->
     <string name="theme">Theme</string>
     <string name="about">About</string>

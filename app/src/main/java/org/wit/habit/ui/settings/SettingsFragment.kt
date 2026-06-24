@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import org.wit.habit.R
 import org.wit.habit.data.local.HabitStore
+import org.wit.habit.data.local.ThemeOption
 import org.wit.habit.data.local.ThemeStore
 import org.wit.habit.utils.applySystemBarInsets
 import timber.log.Timber
@@ -80,18 +81,18 @@ class SettingsFragment : Fragment() {
 
     private fun updateThemeSummary(summary: TextView, swatch: View) {
         val currentKey = ThemeStore.getCurrentThemeKey(requireContext())
-        val name = ThemeStore.themeOptions.find { it.first == currentKey }?.second ?: getString(R.string.theme)
-        summary.text = name
+        val option = ThemeStore.getThemeOption(currentKey)
+        summary.text = getString(option.displayNameRes)
         swatch.backgroundTintList = android.content.res.ColorStateList.valueOf(
-            ContextCompat.getColor(requireContext(), themeColorRes(currentKey))
+            ContextCompat.getColor(requireContext(), option.swatchColorRes)
         )
     }
 
     private fun showThemePicker(summary: TextView, swatch: View) {
         val options = ThemeStore.themeOptions
         val currentKey = ThemeStore.getCurrentThemeKey(requireContext())
-        val currentIndex = options.indexOfFirst { it.first == currentKey }.coerceAtLeast(0)
-        val adapter = object : ArrayAdapter<Pair<String, String>>(
+        val currentIndex = options.indexOfFirst { it.key == currentKey }.coerceAtLeast(0)
+        val adapter = object : ArrayAdapter<ThemeOption>(
             requireContext(),
             android.R.layout.simple_list_item_single_choice,
             options
@@ -102,11 +103,13 @@ class SettingsFragment : Fragment() {
                     gravity = Gravity.CENTER_VERTICAL
                     setPadding(dp(20), dp(10), dp(20), dp(10))
                 }
-                val (key, name) = getItem(position) ?: options[position]
+                val option = getItem(position) ?: options[position]
+                val key = option.key
+                val name = getString(option.displayNameRes)
                 val swatchView = View(context).apply {
                     background = android.graphics.drawable.GradientDrawable().apply {
                         shape = android.graphics.drawable.GradientDrawable.OVAL
-                        setColor(ContextCompat.getColor(context, themeColorRes(key)))
+                        setColor(ContextCompat.getColor(context, option.swatchColorRes))
                     }
                 }
                 val label = TextView(context).apply {
@@ -138,7 +141,7 @@ class SettingsFragment : Fragment() {
         AlertDialog.Builder(requireContext())
             .setTitle(getString(R.string.select_theme_title))
             .setSingleChoiceItems(adapter, currentIndex) { dialog, which ->
-                val selectedKey = options[which].first
+                val selectedKey = options[which].key
                 if (selectedKey != currentKey) {
                     ThemeStore.setTheme(requireContext(), selectedKey)
                     Timber.i("User switched theme to: $selectedKey")
@@ -149,15 +152,6 @@ class SettingsFragment : Fragment() {
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .show()
-    }
-
-    private fun themeColorRes(themeKey: String): Int = when (themeKey) {
-        "blue" -> R.color.blue_primary
-        "red" -> R.color.red_primary
-        "green" -> R.color.green_primary
-        "purple" -> R.color.purple_primary
-        "yellow" -> R.color.yellow_primary
-        else -> R.color.mint_primary
     }
 
     private fun resolveThemeColor(attr: Int): Int {
