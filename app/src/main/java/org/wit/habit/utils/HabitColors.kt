@@ -1,4 +1,4 @@
-package org.wit.habit.util
+package org.wit.habit.utils
 
 import org.wit.habit.R
 

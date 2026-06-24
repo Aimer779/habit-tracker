@@ -1,4 +1,4 @@
-package org.wit.habit.util
+package org.wit.habit.utils
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable

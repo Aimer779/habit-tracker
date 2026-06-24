@@ -13,9 +13,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.wit.habit.util.DateUtils
+import org.wit.habit.utils.DateUtils
 import org.wit.habit.models.Habit
-import org.wit.habit.util.HabitColorHelper
+import org.wit.habit.utils.HabitColorHelper
 import org.wit.habit.ui.theme.HabitTheme
 
 @OptIn(ExperimentalFoundationApi::class)

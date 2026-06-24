@@ -1,4 +1,4 @@
-package org.wit.habit.util
+package org.wit.habit.utils
 
 import java.text.SimpleDateFormat
 import java.util.Calendar

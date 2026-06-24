@@ -29,7 +29,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import org.wit.habit.R
-import org.wit.habit.util.DateUtils
+import org.wit.habit.utils.DateUtils
 import org.wit.habit.data.local.HabitStore
 import org.wit.habit.models.Habit
 import org.wit.habit.ui.add.AddHabitActivity
@@ -38,7 +38,7 @@ import org.wit.habit.ui.home.FilterOption
 import org.wit.habit.ui.home.MainContent
 import org.wit.habit.ui.home.SortOrderButton
 import org.wit.habit.ui.home.ViewModeSelector
-import org.wit.habit.util.ViewMode
+import org.wit.habit.utils.ViewMode
 import org.wit.habit.ui.theme.HabitTheme
 import timber.log.Timber
 

@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import org.json.JSONArray
 import org.json.JSONObject
 import org.wit.habit.models.Habit
-import org.wit.habit.util.DateUtils
+import org.wit.habit.utils.DateUtils
 import timber.log.Timber
 
 class HabitStore(private val context: Context) {

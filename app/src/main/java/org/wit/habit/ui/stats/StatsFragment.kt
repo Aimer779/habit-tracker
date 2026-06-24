@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButtonToggleGroup
 import org.wit.habit.R
-import org.wit.habit.util.DateUtils
+import org.wit.habit.utils.DateUtils
 import org.wit.habit.data.local.HabitStore
 import org.wit.habit.models.Habit
 import org.wit.habit.ui.stats.RankAdapter

@@ -1,6 +1,6 @@
 package org.wit.habit.models
 
-import org.wit.habit.util.DateUtils
+import org.wit.habit.utils.DateUtils
 
 data class Habit(
     var id: Long = System.currentTimeMillis(),

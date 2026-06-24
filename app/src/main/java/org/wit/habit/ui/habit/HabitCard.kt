@@ -3,7 +3,7 @@ package org.wit.habit.ui.habit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.wit.habit.models.Habit
-import org.wit.habit.util.ViewMode
+import org.wit.habit.utils.ViewMode
 
 data class HabitCardCallbacks(
     val onCheckIn: (Habit) -> Unit,

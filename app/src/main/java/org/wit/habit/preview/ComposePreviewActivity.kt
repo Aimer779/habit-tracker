@@ -10,10 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.wit.habit.util.DateUtils
+import org.wit.habit.utils.DateUtils
 import org.wit.habit.models.Habit
 import org.wit.habit.ui.habit.HabitCardCallbacks
-import org.wit.habit.util.ViewMode
+import org.wit.habit.utils.ViewMode
 import org.wit.habit.ui.home.HabitList
 import org.wit.habit.ui.theme.HabitTheme
 
