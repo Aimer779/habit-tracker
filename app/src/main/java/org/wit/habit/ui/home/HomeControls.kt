@@ -22,7 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import org.wit.habit.ui.habit.ViewMode
+import org.wit.habit.util.ViewMode
 import org.wit.habit.ui.theme.HabitTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

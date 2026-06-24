@@ -38,7 +38,7 @@ import org.wit.habit.ui.home.FilterOption
 import org.wit.habit.ui.home.MainContent
 import org.wit.habit.ui.home.SortOrderButton
 import org.wit.habit.ui.home.ViewModeSelector
-import org.wit.habit.ui.habit.ViewMode
+import org.wit.habit.util.ViewMode
 import org.wit.habit.ui.theme.HabitTheme
 import timber.log.Timber
 

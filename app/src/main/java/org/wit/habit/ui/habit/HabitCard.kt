@@ -3,8 +3,7 @@ package org.wit.habit.ui.habit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.wit.habit.models.Habit
-
-enum class ViewMode { MONTH, WEEK, DAY }
+import org.wit.habit.util.ViewMode
 
 data class HabitCardCallbacks(
     val onCheckIn: (Habit) -> Unit,

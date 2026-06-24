@@ -12,7 +12,7 @@ import org.wit.habit.util.DateUtils
 import org.wit.habit.models.Habit
 import org.wit.habit.ui.habit.HabitCard
 import org.wit.habit.ui.habit.HabitCardCallbacks
-import org.wit.habit.ui.habit.ViewMode
+import org.wit.habit.util.ViewMode
 import org.wit.habit.ui.theme.HabitTheme
 
 @Composable

@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.wit.habit.util.DateUtils
 import org.wit.habit.models.Habit
-import org.wit.habit.ui.theme.HabitColorHelper
+import org.wit.habit.util.HabitColorHelper
 import org.wit.habit.ui.theme.HabitTheme
 
 @OptIn(ExperimentalFoundationApi::class)
