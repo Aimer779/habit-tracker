@@ -49,7 +49,7 @@ class SettingsFragment : Fragment() {
         val versionName = packageManager.getPackageInfo(packageName, 0).versionName
 
         tvAppName.text = getString(R.string.app_name)
-        tvVersion.text = "Version $versionName"
+        tvVersion.text = getString(R.string.version_label, versionName)
 
         updateThemeSummary(tvThemeSummary, viewThemeSwatch)
 
@@ -59,28 +59,28 @@ class SettingsFragment : Fragment() {
 
         rowClearData.setOnClickListener {
             AlertDialog.Builder(requireContext())
-                .setTitle("Confirm Clear")
-                .setMessage("Are you sure you want to clear all habit data? This action cannot be undone.")
-                .setPositiveButton("Clear Data") { _, _ ->
+                .setTitle(getString(R.string.confirm_clear_title))
+                .setMessage(getString(R.string.confirm_clear_message))
+                .setPositiveButton(getString(R.string.clear_data_action)) { _, _ ->
                     habitStore.clearAll()
                     Timber.i("User cleared all habit data")
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(getString(R.string.cancel), null)
                 .show()
         }
 
         rowAbout.setOnClickListener {
             AlertDialog.Builder(requireContext())
-                .setTitle("About")
-                .setMessage("${getString(R.string.app_name)}\nVersion $versionName")
-                .setPositiveButton("OK", null)
+                .setTitle(getString(R.string.about_title))
+                .setMessage(getString(R.string.about_message, getString(R.string.app_name), versionName))
+                .setPositiveButton(getString(R.string.ok), null)
                 .show()
         }
     }
 
     private fun updateThemeSummary(summary: TextView, swatch: View) {
         val currentKey = ThemeStore.getCurrentThemeKey(requireContext())
-        val name = ThemeStore.themeOptions.find { it.first == currentKey }?.second ?: "Mint"
+        val name = ThemeStore.themeOptions.find { it.first == currentKey }?.second ?: getString(R.string.theme)
         summary.text = name
         swatch.backgroundTintList = android.content.res.ColorStateList.valueOf(
             ContextCompat.getColor(requireContext(), themeColorRes(currentKey))
@@ -126,13 +126,17 @@ class SettingsFragment : Fragment() {
                         )
                     }, LinearLayout.LayoutParams(dp(24), dp(24)))
                 }
-                row.contentDescription = if (key == currentKey) "$name, selected" else name
+                row.contentDescription = if (key == currentKey) {
+                    getString(R.string.theme_swatch_selected, name)
+                } else {
+                    name
+                }
                 return row
             }
         }
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Select Theme")
+            .setTitle(getString(R.string.select_theme_title))
             .setSingleChoiceItems(adapter, currentIndex) { dialog, which ->
                 val selectedKey = options[which].first
                 if (selectedKey != currentKey) {
@@ -143,7 +147,7 @@ class SettingsFragment : Fragment() {
                 }
                 dialog.dismiss()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 

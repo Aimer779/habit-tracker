@@ -45,7 +45,7 @@ class RankAdapter(
 
         holder.tvHabitIcon.text = item.icon
         holder.tvHabitName.text = item.name
-        holder.tvCheckInCount.text = "${item.count} days"
+        holder.tvCheckInCount.text = context.getString(R.string.rank_days, item.count)
 
         val progress = if (maxCount > 0) item.count.toFloat() / maxCount else 0f
         holder.progressBar.setProgress((progress * 100).toInt(), false)

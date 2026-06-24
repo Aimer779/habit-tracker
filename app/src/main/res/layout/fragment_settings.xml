@@ -16,7 +16,7 @@
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Settings"
+            android:text="@string/settings"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="?attr/colorOnSurface"
@@ -70,7 +70,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Theme"
+                    android:text="@string/theme"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="?attr/colorOnSurface" />
@@ -109,7 +109,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="About"
+                android:text="@string/about"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorOnSurface" />
@@ -125,7 +125,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Danger Zone"
+            android:text="@string/danger_zone"
             android:textSize="13sp"
             android:textStyle="bold"
             android:textColor="?attr/colorError"
@@ -147,7 +147,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Clear Data"
+                android:text="@string/clear_data"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="?attr/colorOnErrorContainer" />
@@ -155,7 +155,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Delete all habits and check-in history"
+                android:text="@string/clear_data_subtitle"
                 android:textSize="14sp"
                 android:textColor="?attr/colorOnErrorContainer"
                 android:alpha="0.78"

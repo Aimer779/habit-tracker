@@ -7,4 +7,66 @@
     <string name="all">All</string>
     <string name="checked_in">Checked In</string>
     <string name="not_checked_in">Not Checked In</string>
+
+    <!-- Navigation / general actions -->
+    <string name="navigate_back">Navigate back</string>
+    <string name="save">Save</string>
+    <string name="update">Update</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="undo">Undo</string>
+
+    <!-- Add / Edit Habit -->
+    <string name="add_habit_title">Add Habit</string>
+    <string name="edit_habit_title">Edit Habit</string>
+    <string name="habit_name_label">Habit Name</string>
+    <string name="habit_name_error">Please enter a habit name</string>
+    <string name="description_optional">Description (Optional)</string>
+    <string name="appearance">Appearance</string>
+    <string name="icon">Icon</string>
+    <string name="color">Color</string>
+    <string name="daily_target">Daily Target</string>
+    <string name="times_per_day">Times per day</string>
+    <string name="decrease_daily_target">Decrease daily target</string>
+    <string name="increase_daily_target">Increase daily target</string>
+
+    <!-- Home -->
+    <string name="empty_state_no_match">No habits match the current filter.</string>
+    <string name="empty_state_no_habits">No habits yet. Tap the button below to add one.</string>
+    <string name="delete_habit_title">Delete %1$s?</string>
+    <string name="delete_habit_message">This habit has %1$d check-ins. You can undo immediately after deleting.</string>
+    <string name="delete_action">Delete</string>
+    <string name="deleted_habit_message">Deleted %1$s</string>
+
+    <!-- Statistics -->
+    <string name="statistics">Statistics</string>
+    <string name="period_week">Week</string>
+    <string name="period_month">Month</string>
+    <string name="period_year">Year</string>
+    <string name="total_check_ins">Total Check-ins</string>
+    <string name="current_streak">Current Streak</string>
+    <string name="longest_streak">Longest Streak</string>
+    <string name="active_days">Active Days</string>
+    <string name="content_description_total_check_ins">Total check-ins</string>
+    <string name="content_description_current_streak">Current streak</string>
+    <string name="content_description_longest_streak">Longest streak</string>
+    <string name="content_description_active_days">Active days</string>
+    <string name="habit_rankings">Habit Rankings</string>
+    <string name="by_completed_days">By Completed Days</string>
+    <string name="rank_days">%1$d days</string>
+
+    <!-- Settings -->
+    <string name="theme">Theme</string>
+    <string name="about">About</string>
+    <string name="about_title">About</string>
+    <string name="version_label">Version %1$s</string>
+    <string name="select_theme_title">Select Theme</string>
+    <string name="theme_swatch_selected">%1$s, selected</string>
+    <string name="clear_data">Clear Data</string>
+    <string name="clear_data_subtitle">Delete all habits and check-in history</string>
+    <string name="danger_zone">Danger Zone</string>
+    <string name="confirm_clear_title">Confirm Clear</string>
+    <string name="confirm_clear_message">Are you sure you want to clear all habit data? This action cannot be undone.</string>
+    <string name="clear_data_action">Clear Data</string>
+    <string name="about_message">%1$s\nVersion %2$s</string>
 </resources>

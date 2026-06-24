@@ -50,9 +50,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.wit.habit.R
 import org.wit.habit.utils.HabitColors
 import org.wit.habit.models.Habit
 import org.wit.habit.ui.theme.HabitTheme
@@ -72,8 +74,8 @@ fun AddHabitScreen(
     var nameError by remember { mutableStateOf(false) }
 
     val isEditing = habit != null
-    val title = if (isEditing) "Edit Habit" else "Add Habit"
-    val saveLabel = if (isEditing) "Update" else "Save"
+    val title = if (isEditing) stringResource(R.string.edit_habit_title) else stringResource(R.string.add_habit_title)
+    val saveLabel = if (isEditing) stringResource(R.string.update) else stringResource(R.string.save)
 
     Scaffold(
         topBar = {
@@ -83,7 +85,7 @@ fun AddHabitScreen(
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Navigate back"
+                            contentDescription = stringResource(R.string.navigate_back)
                         )
                     }
                 }
@@ -110,13 +112,13 @@ fun AddHabitScreen(
                             name = it
                             if (it.isNotBlank()) nameError = false
                         },
-                        label = { Text("Habit Name") },
+                        label = { Text(stringResource(R.string.habit_name_label)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         isError = nameError,
                         supportingText = {
                             if (nameError) {
-                                Text("Please enter a habit name")
+                                Text(stringResource(R.string.habit_name_error))
                             }
                         }
                     )
@@ -124,7 +126,7 @@ fun AddHabitScreen(
                     OutlinedTextField(
                         value = description,
                         onValueChange = { description = it },
-                        label = { Text("Description (Optional)") },
+                        label = { Text(stringResource(R.string.description_optional)) },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
@@ -138,14 +140,14 @@ fun AddHabitScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        text = "Appearance",
+                        text = stringResource(R.string.appearance),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
-                            text = "Icon",
+                            text = stringResource(R.string.icon),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -160,7 +162,7 @@ fun AddHabitScreen(
 
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         Text(
-                            text = "Color",
+                            text = stringResource(R.string.color),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -189,7 +191,7 @@ fun AddHabitScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Daily Target",
+                        text = stringResource(R.string.daily_target),
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -239,7 +241,7 @@ fun AddHabitScreen(
                 onClick = onNavigateBack,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
         }
     }
@@ -390,7 +392,7 @@ private fun TargetStepper(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "Times per day",
+            text = stringResource(R.string.times_per_day),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -406,7 +408,7 @@ private fun TargetStepper(
             ) {
                 Icon(
                     imageVector = Icons.Default.Remove,
-                    contentDescription = "Decrease daily target"
+                    contentDescription = stringResource(R.string.decrease_daily_target)
                 )
             }
 
@@ -423,7 +425,7 @@ private fun TargetStepper(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Increase daily target"
+                    contentDescription = stringResource(R.string.increase_daily_target)
                 )
             }
         }

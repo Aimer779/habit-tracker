@@ -6,10 +6,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import org.wit.habit.R
 import org.wit.habit.utils.DateUtils
 import org.wit.habit.models.Habit
 import org.wit.habit.ui.habit.HabitCardCallbacks
@@ -62,9 +64,9 @@ private fun EmptyState(
     ) {
         Text(
             text = if (hasAnyHabits) {
-                "No habits match the current filter."
+                stringResource(R.string.empty_state_no_match)
             } else {
-                "No habits yet. Tap the button below to add one."
+                stringResource(R.string.empty_state_no_habits)
             },
             fontSize = 16.sp,
             textAlign = TextAlign.Center,

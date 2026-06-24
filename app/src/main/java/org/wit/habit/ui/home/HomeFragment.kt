@@ -165,12 +165,12 @@ class HomeFragment : Fragment() {
     private fun confirmDeleteHabit(habit: Habit) {
         val totalCheckIns = habit.checkInCounts.values.sum()
         val dialog = AlertDialog.Builder(requireContext())
-            .setTitle("Delete ${habit.name}?")
-            .setMessage("This habit has $totalCheckIns check-ins. You can undo immediately after deleting.")
-            .setPositiveButton("Delete") { _, _ ->
+            .setTitle(getString(R.string.delete_habit_title, habit.name))
+            .setMessage(getString(R.string.delete_habit_message, totalCheckIns))
+            .setPositiveButton(getString(R.string.delete_action)) { _, _ ->
                 deleteHabitWithUndo(habit)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
         dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             .setTextColor(requireContext().getColor(com.google.android.material.R.color.design_default_color_error))
@@ -181,8 +181,8 @@ class HomeFragment : Fragment() {
         Timber.i("User deleted habit: ${habit.name}")
         refreshTrigger++
 
-        Snackbar.make(requireView(), "Deleted ${habit.name}", Snackbar.LENGTH_LONG)
-            .setAction("Undo") {
+        Snackbar.make(requireView(), getString(R.string.deleted_habit_message, habit.name), Snackbar.LENGTH_LONG)
+            .setAction(getString(R.string.undo)) {
                 habitStore.create(habit)
                 Timber.i("User restored deleted habit: ${habit.name}")
                 refreshTrigger++
