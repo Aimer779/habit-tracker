@@ -19,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.core.view.WindowCompat
+import androidx.core.view.doOnLayout
+import androidx.core.view.updatePadding
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -113,17 +115,18 @@ class MainActivity : BaseActivity() {
     private fun syncFragmentBottomInset() {
         val fragmentContainer = findViewById<FragmentContainerView>(R.id.fragmentContainer)
         val navView = findViewById<ComposeView>(R.id.composeNavView)
-        val initialLeft = fragmentContainer.paddingLeft
-        val initialTop = fragmentContainer.paddingTop
-        val initialRight = fragmentContainer.paddingRight
 
-        navView.addOnLayoutChangeListener { _, _, top, _, bottom, _, oldTop, _, oldBottom ->
-            val navHeight = bottom - top
-            val oldNavHeight = oldBottom - oldTop
-            if (navHeight != oldNavHeight || fragmentContainer.paddingBottom != navHeight) {
-                fragmentContainer.setPadding(initialLeft, initialTop, initialRight, navHeight)
+        val updatePadding = {
+            val navHeight = navView.height
+            if (navHeight > 0 && fragmentContainer.paddingBottom != navHeight) {
+                fragmentContainer.updatePadding(bottom = navHeight)
             }
         }
+
+        // Apply once after the navigation view has been laid out, and keep
+        // listening because its height changes when tabs switch (FAB shown/hidden).
+        navView.doOnLayout { updatePadding() }
+        navView.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ -> updatePadding() }
     }
 
     private fun switchTab(tab: NavTab) {
