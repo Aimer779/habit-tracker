@@ -22,8 +22,13 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import org.wit.habit.ui.compose.FloatingBottomNav
-import org.wit.habit.ui.compose.NavTab
+import org.wit.habit.ui.add.AddHabitActivity
+import org.wit.habit.ui.base.BaseActivity
+import org.wit.habit.ui.navigation.FloatingBottomNav
+import org.wit.habit.ui.navigation.NavTab
+import org.wit.habit.ui.home.HomeFragment
+import org.wit.habit.ui.settings.SettingsFragment
+import org.wit.habit.ui.stats.StatsFragment
 import org.wit.habit.ui.theme.HabitTheme
 import timber.log.Timber
 

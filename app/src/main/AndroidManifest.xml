@@ -21,10 +21,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddHabitActivity"
+            android:name=".ui.add.AddHabitActivity"
             android:exported="false" />
         <activity
-            android:name=".ComposePreviewActivity"
+            android:name=".preview.ComposePreviewActivity"
             android:exported="false"
             android:label="Compose Preview" />
     </application>

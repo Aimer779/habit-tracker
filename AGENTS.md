@@ -5,7 +5,7 @@
 - **构建系统**：Gradle (Kotlin DSL) + Android Gradle Plugin 9.2.0
 - **语言**：Kotlin（由 AGP / Gradle toolchain 管理）
 - **SDK 级别**：compileSdk 36 / minSdk 30 / targetSdk 36 / Java 11
-- **架构**：多 Activity + XML Layout + RecyclerView + Adapter 回调模式
+- **架构**：多 Activity + Fragment + Jetpack Compose 混合；底部导航由 Compose 实现，内容区以 Fragment 承载，统计排行保留 RecyclerView + Adapter
 - **核心依赖**：
   - AndroidX AppCompat / Core KTX / Activity KTX
   - ConstraintLayout

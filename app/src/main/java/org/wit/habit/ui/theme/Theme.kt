@@ -5,7 +5,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
-import org.wit.habit.helpers.ThemeStore
+import org.wit.habit.data.local.ThemeStore
 
 private data class ThemePalette(
     val primary: androidx.compose.ui.graphics.Color,
