@@ -28,6 +28,7 @@ class StatsFragment : Fragment() {
     private lateinit var tvLongestStreak: TextView
     private lateinit var tvActiveDays: TextView
     private lateinit var rvRankings: RecyclerView
+    private lateinit var rankAdapter: RankAdapter
 
     private var currentYear = 0
     private var currentMonth = 0
@@ -83,6 +84,8 @@ class StatsFragment : Fragment() {
         rvRankings = view.findViewById(R.id.rvRankings)
 
         rvRankings.layoutManager = LinearLayoutManager(requireContext())
+        rankAdapter = RankAdapter()
+        rvRankings.adapter = rankAdapter
     }
 
     private fun setupListeners() {
@@ -221,7 +224,7 @@ class StatsFragment : Fragment() {
         tvCurrentStreak.text = summary.currentStreak.toString()
         tvLongestStreak.text = summary.longestStreak.toString()
 
-        rvRankings.adapter = RankAdapter(summary.rankings, summary.maxCount)
+        rankAdapter.submitItems(summary.rankings, summary.maxCount)
     }
 
 }

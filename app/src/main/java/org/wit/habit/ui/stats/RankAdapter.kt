@@ -13,9 +13,15 @@ import org.wit.habit.R
 data class RankItem(val icon: String, val name: String, val count: Int)
 
 class RankAdapter(
-    private val items: List<RankItem>,
-    private val maxCount: Int
+    private var items: List<RankItem> = emptyList(),
+    private var maxCount: Int = 0
 ) : RecyclerView.Adapter<RankAdapter.ViewHolder>() {
+
+    fun submitItems(items: List<RankItem>, maxCount: Int) {
+        this.items = items
+        this.maxCount = maxCount
+        notifyDataSetChanged()
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val cardRankBadge: MaterialCardView = itemView.findViewById(R.id.cardRankBadge)
