@@ -14,12 +14,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup
 import org.wit.habit.R
 import org.wit.habit.utils.DateUtils
 import org.wit.habit.data.local.HabitStore
-import org.wit.habit.models.Habit
-import org.wit.habit.ui.stats.RankAdapter
-import org.wit.habit.ui.stats.RankItem
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 class StatsFragment : Fragment() {
 
@@ -214,198 +209,19 @@ class StatsFragment : Fragment() {
     private fun loadStats() {
         val habits = habitStore.findAll()
         val today = DateUtils.today()
-
-        when (currentTab) {
-            TAB_MONTH -> loadMonthStats(habits, today)
-            TAB_YEAR -> loadYearStats(habits, today)
-            TAB_WEEK -> loadWeekStats(habits, today)
-            else -> loadMonthStats(habits, today)
+        val period = when (currentTab) {
+            TAB_WEEK -> StatsPeriod.Week(currentWeekStart)
+            TAB_YEAR -> StatsPeriod.Year(currentYear)
+            else -> StatsPeriod.Month(currentYear, currentMonth)
         }
-    }
+        val summary = StatsCalculator.calculate(habits, period, today)
 
-    private fun loadMonthStats(habits: List<Habit>, today: String) {
-        val firstDay = DateUtils.getFirstDayOfMonth(currentYear, currentMonth)
-        val lastDay = DateUtils.getLastDayOfMonth(currentYear, currentMonth)
+        tvTotalCheckIns.text = summary.totalCheckIns.toString()
+        tvActiveDays.text = summary.activeDays.toString()
+        tvCurrentStreak.text = summary.currentStreak.toString()
+        tvLongestStreak.text = summary.longestStreak.toString()
 
-        var totalCheckIns = 0
-        val activeDaysSet = mutableSetOf<String>()
-        val habitMonthCounts = mutableMapOf<Long, Int>()
-
-        habits.forEach { habit ->
-            var monthCount = 0
-            habit.checkInCounts.forEach { (date, count) ->
-                if (date in firstDay..lastDay) {
-                    totalCheckIns += count
-                    activeDaysSet.add(date)
-                    if (count >= habit.targetCount) {
-                        monthCount++
-                    }
-                }
-            }
-            habitMonthCounts[habit.id] = monthCount
-        }
-
-        tvTotalCheckIns.text = totalCheckIns.toString()
-        tvActiveDays.text = activeDaysSet.size.toString()
-        tvCurrentStreak.text = calculateCurrentStreak(habits, today).toString()
-        tvLongestStreak.text = calculateLongestStreak(activeDaysSet).toString()
-
-        val rankings = habits
-            .filter { (habitMonthCounts[it.id] ?: 0) > 0 }
-            .map {
-                RankItem(
-                    icon = it.icon,
-                    name = it.name,
-                    count = habitMonthCounts[it.id] ?: 0
-                )
-            }
-            .sortedWith(compareByDescending<RankItem> { it.count }.thenBy { it.name })
-        val maxCount = rankings.maxOfOrNull { it.count } ?: 0
-
-        rvRankings.adapter = RankAdapter(rankings, maxCount)
-    }
-
-    private fun loadWeekStats(habits: List<Habit>, today: String) {
-        val weekEnd = DateUtils.addDays(currentWeekStart, 6)
-
-        var totalCheckIns = 0
-        val activeDaysSet = mutableSetOf<String>()
-        val habitWeekCounts = mutableMapOf<Long, Int>()
-
-        habits.forEach { habit ->
-            var weekCount = 0
-            habit.checkInCounts.forEach { (date, count) ->
-                if (date in currentWeekStart..weekEnd) {
-                    totalCheckIns += count
-                    activeDaysSet.add(date)
-                    if (count >= habit.targetCount) {
-                        weekCount++
-                    }
-                }
-            }
-            habitWeekCounts[habit.id] = weekCount
-        }
-
-        tvTotalCheckIns.text = totalCheckIns.toString()
-        tvActiveDays.text = activeDaysSet.size.toString()
-        tvCurrentStreak.text = calculateCurrentStreak(habits, today).toString()
-        tvLongestStreak.text = calculateLongestStreak(activeDaysSet).toString()
-
-        val rankings = habits
-            .filter { (habitWeekCounts[it.id] ?: 0) > 0 }
-            .map {
-                RankItem(
-                    icon = it.icon,
-                    name = it.name,
-                    count = habitWeekCounts[it.id] ?: 0
-                )
-            }
-            .sortedWith(compareByDescending<RankItem> { it.count }.thenBy { it.name })
-        val maxCount = rankings.maxOfOrNull { it.count } ?: 0
-
-        rvRankings.adapter = RankAdapter(rankings, maxCount)
-    }
-
-    private fun loadYearStats(habits: List<Habit>, today: String) {
-        val yearPrefix = "$currentYear-"
-
-        var totalCheckIns = 0
-        val activeDaysSet = mutableSetOf<String>()
-        val habitYearCounts = mutableMapOf<Long, Int>()
-
-        habits.forEach { habit ->
-            var yearCount = 0
-            habit.checkInCounts.forEach { (date, count) ->
-                if (date.startsWith(yearPrefix)) {
-                    totalCheckIns += count
-                    activeDaysSet.add(date)
-                    if (count >= habit.targetCount) {
-                        yearCount++
-                    }
-                }
-            }
-            habitYearCounts[habit.id] = yearCount
-        }
-
-        tvTotalCheckIns.text = totalCheckIns.toString()
-        tvActiveDays.text = activeDaysSet.size.toString()
-        tvCurrentStreak.text = calculateCurrentStreak(habits, today).toString()
-        tvLongestStreak.text = calculateLongestStreak(activeDaysSet).toString()
-
-        val rankings = habits
-            .filter { (habitYearCounts[it.id] ?: 0) > 0 }
-            .map {
-                RankItem(
-                    icon = it.icon,
-                    name = it.name,
-                    count = habitYearCounts[it.id] ?: 0
-                )
-            }
-            .sortedWith(compareByDescending<RankItem> { it.count }.thenBy { it.name })
-        val maxCount = rankings.maxOfOrNull { it.count } ?: 0
-
-        rvRankings.adapter = RankAdapter(rankings, maxCount)
-    }
-
-    private fun calculateCurrentStreak(habits: List<Habit>, today: String): Int {
-        val allDates = mutableSetOf<String>()
-        habits.forEach { habit ->
-            allDates.addAll(habit.checkInCounts.keys)
-        }
-
-        if (allDates.isEmpty()) return 0
-
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val cal = Calendar.getInstance()
-        val todayDate = formatter.parse(today) ?: return 0
-
-        var streak = 0
-        cal.time = todayDate
-
-        while (true) {
-            val dateStr = formatter.format(cal.time)
-            if (allDates.contains(dateStr)) {
-                streak++
-            } else {
-                if (streak == 0 && dateStr == today) {
-                    return 0
-                }
-                break
-            }
-            cal.add(Calendar.DAY_OF_YEAR, -1)
-        }
-
-        return streak
-    }
-
-    private fun calculateLongestStreak(activeDates: Set<String>): Int {
-        if (activeDates.isEmpty()) return 0
-
-        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        val sortedDates = activeDates.mapNotNull { formatter.parse(it) }.sorted()
-
-        if (sortedDates.isEmpty()) return 0
-
-        var maxStreak = 1
-        var currentStreak = 1
-        val cal = Calendar.getInstance()
-
-        for (i in 1 until sortedDates.size) {
-            val prev = sortedDates[i - 1]
-            val curr = sortedDates[i]
-
-            cal.time = prev
-            cal.add(Calendar.DAY_OF_YEAR, 1)
-
-            if (formatter.format(cal.time) == formatter.format(curr)) {
-                currentStreak++
-                maxStreak = maxOf(maxStreak, currentStreak)
-            } else {
-                currentStreak = 1
-            }
-        }
-
-        return maxStreak
+        rvRankings.adapter = RankAdapter(summary.rankings, summary.maxCount)
     }
 
 }
