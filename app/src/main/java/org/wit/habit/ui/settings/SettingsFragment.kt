@@ -11,12 +11,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import org.wit.habit.R
 import org.wit.habit.data.local.HabitStore
 import org.wit.habit.data.local.ThemeStore
+import org.wit.habit.utils.applySystemBarInsets
 import timber.log.Timber
 
 class SettingsFragment : Fragment() {
@@ -35,7 +34,7 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         habitStore = HabitStore(requireContext())
-        applyInsets(view)
+        view.applySystemBarInsets()
 
         val tvAppName: TextView = view.findViewById(R.id.tvAppName)
         val tvVersion: TextView = view.findViewById(R.id.tvVersion)
@@ -76,24 +75,6 @@ class SettingsFragment : Fragment() {
                 .setMessage("${getString(R.string.app_name)}\nVersion $versionName")
                 .setPositiveButton("OK", null)
                 .show()
-        }
-    }
-
-    private fun applyInsets(view: View) {
-        val initialLeft = view.paddingLeft
-        val initialTop = view.paddingTop
-        val initialRight = view.paddingRight
-        val initialBottom = view.paddingBottom
-
-        ViewCompat.setOnApplyWindowInsetsListener(view) { target, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            target.setPadding(
-                initialLeft + bars.left,
-                initialTop + bars.top,
-                initialRight + bars.right,
-                initialBottom
-            )
-            insets
         }
     }
 

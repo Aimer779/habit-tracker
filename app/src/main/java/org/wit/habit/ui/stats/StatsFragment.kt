@@ -5,14 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButtonToggleGroup
 import org.wit.habit.R
 import org.wit.habit.utils.DateUtils
+import org.wit.habit.utils.applySystemBarInsets
 import org.wit.habit.data.local.HabitStore
 import java.util.Calendar
 
@@ -53,7 +52,7 @@ class StatsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         habitStore = HabitStore(requireContext())
-        applyInsets(view)
+        view.applySystemBarInsets()
 
         val cal = Calendar.getInstance()
         currentYear = cal.get(Calendar.YEAR)
@@ -126,24 +125,6 @@ class StatsFragment : Fragment() {
         }
         if (periodToggleGroup.checkedButtonId != checkedId) {
             periodToggleGroup.check(checkedId)
-        }
-    }
-
-    private fun applyInsets(view: View) {
-        val initialLeft = view.paddingLeft
-        val initialTop = view.paddingTop
-        val initialRight = view.paddingRight
-        val initialBottom = view.paddingBottom
-
-        ViewCompat.setOnApplyWindowInsetsListener(view) { target, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            target.setPadding(
-                initialLeft + bars.left,
-                initialTop + bars.top,
-                initialRight + bars.right,
-                initialBottom
-            )
-            insets
         }
     }
 

@@ -24,12 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import org.wit.habit.R
 import org.wit.habit.utils.DateUtils
+import org.wit.habit.utils.applySystemBarInsets
 import org.wit.habit.data.local.HabitStore
 import org.wit.habit.models.Habit
 import org.wit.habit.ui.add.AddHabitActivity
@@ -63,7 +62,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         habitStore = HabitStore(requireContext())
-        applyInsets(view)
+        view.applySystemBarInsets()
 
         val composeView = view.findViewById<ComposeView>(R.id.composeView)
         composeView.setViewCompositionStrategy(
@@ -160,24 +159,6 @@ class HomeFragment : Fragment() {
         super.onHiddenChanged(hidden)
         if (!hidden) {
             refreshTrigger++
-        }
-    }
-
-    private fun applyInsets(view: View) {
-        val initialLeft = view.paddingLeft
-        val initialTop = view.paddingTop
-        val initialRight = view.paddingRight
-        val initialBottom = view.paddingBottom
-
-        ViewCompat.setOnApplyWindowInsetsListener(view) { target, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            target.setPadding(
-                initialLeft + bars.left,
-                initialTop + bars.top,
-                initialRight + bars.right,
-                initialBottom
-            )
-            insets
         }
     }
 

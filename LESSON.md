@@ -318,3 +318,34 @@ c3bf45b  Implement habit tracker core features: RecyclerView list, check-in/canc
 
 
 ============================================================
+
+
+============================================================
+
+
+------------------------------------------------------------
+【问题12】View 扩展函数调用形式导致编译器报 receiver type mismatch
+------------------------------------------------------------
+现象:
+  Phase 6 抽取 ViewInsets 工具后，在 Fragment 中调用扩展函数：
+    applySystemBarInsets(view)
+  编译报错：
+    Unresolved reference. None of the following candidates is applicable because of a receiver type mismatch:
+    fun View.applySystemBarInsets(applyTop: Boolean = ..., applyBottom: Boolean = ...): Unit
+
+原因:
+  当前 Kotlin 编译器/项目配置下，以普通函数前缀形式调用 View 扩展函数时，
+  编译器未能将传入的 View 参数正确识别为 receiver。
+
+解决方案:
+  改用点调用语法：
+    view.applySystemBarInsets()
+  三个 Fragment 均改为点调用后编译通过。
+
+经验教训:
+  - 在 Fragment / Activity 中调用扩展函数时，优先使用 `receiver.function()` 的点调用形式
+  - 遇到 "receiver type mismatch" 时，首先检查调用形式是否符合扩展函数习惯用法
+  - 抽取为工具类后，应在实际调用处立即编译验证，不要假设前缀调用一定等价
+
+
+============================================================
