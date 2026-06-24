@@ -43,7 +43,7 @@ fun HabitComponentTestScreen() {
                 icon = "📖",
                 color = "blue",
                 targetCount = 1,
-                checkInCounts = mutableMapOf(
+                checkInCounts = mapOf(
                     DateUtils.today() to 1,
                     DateUtils.daysAgo(1) to 1,
                     DateUtils.daysAgo(3) to 1,
@@ -56,7 +56,7 @@ fun HabitComponentTestScreen() {
                 icon = "🏃",
                 color = "green",
                 targetCount = 3,
-                checkInCounts = mutableMapOf(
+                checkInCounts = mapOf(
                     DateUtils.daysAgo(0) to 2,
                     DateUtils.daysAgo(2) to 3,
                     DateUtils.daysAgo(5) to 1
@@ -68,7 +68,7 @@ fun HabitComponentTestScreen() {
                 icon = "🧘",
                 color = "purple",
                 targetCount = 1,
-                checkInCounts = mutableMapOf(
+                checkInCounts = mapOf(
                     DateUtils.today() to 1,
                     DateUtils.daysAgo(2) to 1,
                     DateUtils.daysAgo(4) to 1
@@ -80,7 +80,7 @@ fun HabitComponentTestScreen() {
                 icon = "💧",
                 color = "teal",
                 targetCount = 8,
-                checkInCounts = mutableMapOf(
+                checkInCounts = mapOf(
                     DateUtils.today() to 5
                 )
             )
@@ -147,9 +147,7 @@ fun HabitComponentTestScreen() {
                         val index = testHabits.indexOfFirst { it.id == habit.id }
                         if (index != -1) {
                             val updatedHabit = habit.copy(
-                                checkInCounts = habit.checkInCounts.toMutableMap().apply {
-                                    put(today, currentCount + 1)
-                                }
+                                checkInCounts = habit.checkInCounts + (today to currentCount + 1)
                             )
                             testHabits[index] = updatedHabit
                         }
@@ -162,9 +160,7 @@ fun HabitComponentTestScreen() {
                         val index = testHabits.indexOfFirst { it.id == habit.id }
                         if (index != -1) {
                             val updatedHabit = habit.copy(
-                                checkInCounts = habit.checkInCounts.toMutableMap().apply {
-                                    remove(today)
-                                }
+                                checkInCounts = habit.checkInCounts - today
                             )
                             testHabits[index] = updatedHabit
                         }

@@ -56,7 +56,7 @@ fun HabitListMonthPreview() {
                     icon = "📖",
                     color = "blue",
                     targetCount = 1,
-                    checkInCounts = mutableMapOf(DateUtils.today() to 1)
+                    checkInCounts = mapOf(DateUtils.today() to 1)
                 ),
                 Habit(
                     id = 2,
@@ -64,7 +64,7 @@ fun HabitListMonthPreview() {
                     icon = "🏃",
                     color = "green",
                     targetCount = 3,
-                    checkInCounts = mutableMapOf()
+                    checkInCounts = emptyMap()
                 ),
                 Habit(
                     id = 3,
@@ -72,7 +72,7 @@ fun HabitListMonthPreview() {
                     icon = "🧘",
                     color = "purple",
                     targetCount = 1,
-                    checkInCounts = mutableMapOf(DateUtils.today() to 1)
+                    checkInCounts = mapOf(DateUtils.today() to 1)
                 )
             ),
             viewMode = ViewMode.MONTH,
@@ -98,7 +98,7 @@ fun HabitListDayPreview() {
                     icon = "📖",
                     color = "blue",
                     targetCount = 1,
-                    checkInCounts = mutableMapOf(DateUtils.today() to 1)
+                    checkInCounts = mapOf(DateUtils.today() to 1)
                 ),
                 Habit(
                     id = 2,
@@ -106,7 +106,7 @@ fun HabitListDayPreview() {
                     icon = "🏃",
                     color = "green",
                     targetCount = 3,
-                    checkInCounts = mutableMapOf()
+                    checkInCounts = emptyMap()
                 )
             ),
             viewMode = ViewMode.DAY,

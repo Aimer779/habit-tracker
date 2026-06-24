@@ -3,12 +3,12 @@ package org.wit.habit.models
 import org.wit.habit.utils.DateUtils
 
 data class Habit(
-    var id: Long = System.currentTimeMillis(),
-    var name: String = "",
-    var description: String = "",
-    var createdDate: String = DateUtils.today(),
-    var checkInCounts: MutableMap<String, Int> = mutableMapOf(),
-    var targetCount: Int = 1,
-    var icon: String = "✅",
-    var color: String = "blue"
+    val id: Long = System.currentTimeMillis(),
+    val name: String = "",
+    val description: String = "",
+    val createdDate: String = DateUtils.today(),
+    val checkInCounts: Map<String, Int> = emptyMap(),
+    val targetCount: Int = 1,
+    val icon: String = "✅",
+    val color: String = "blue"
 )

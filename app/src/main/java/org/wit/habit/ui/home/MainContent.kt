@@ -101,7 +101,7 @@ fun MainContentWithHabitsPreview() {
                     icon = "📖",
                     color = "blue",
                     targetCount = 1,
-                    checkInCounts = mutableMapOf(DateUtils.today() to 1)
+                    checkInCounts = mapOf(DateUtils.today() to 1)
                 )
             ),
             viewMode = ViewMode.MONTH,

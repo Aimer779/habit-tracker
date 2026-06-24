@@ -260,3 +260,31 @@ c3bf45b  Implement habit tracker core features: RecyclerView list, check-in/canc
 
 
 ============================================================
+
+
+------------------------------------------------------------
+【问题10】Android 单元测试中使用 org.json 报 RuntimeException
+------------------------------------------------------------
+现象:
+  新增 HabitSerializerTest 后运行 ./gradlew.bat test，
+  所有用到 JSONObject/JSONArray 的测试都报 java.lang.RuntimeException。
+
+原因:
+  Android 单元测试默认使用 android.jar 的桩实现，
+  org.json 包中未实现的方法会抛出 RuntimeException，
+  而不是执行真正的 JSON 解析/构造逻辑。
+
+解决方案:
+  在 gradle/libs.versions.toml 中添加 org.json 的测试依赖：
+    json = "20231013"
+    json = { group = "org.json", name = "json", version.ref = "json" }
+  在 app/build.gradle.kts 中：
+    testImplementation(libs.json)
+
+经验教训:
+  - 单元测试里直接使用 Android SDK 的 org.json 时，需要额外引入真实实现
+  - 报错信息只有 RuntimeException 时，优先怀疑 android.jar 桩实现问题
+  - 网络受限环境下，添加依赖前确认本地 Gradle 缓存是否已有该库
+
+
+============================================================

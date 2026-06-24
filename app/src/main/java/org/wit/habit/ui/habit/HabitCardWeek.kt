@@ -149,9 +149,10 @@ fun HabitCardWeek(
 fun HabitCardWeekPreview() {
     HabitTheme {
         val weekStart = DateUtils.getWeekStart(DateUtils.today())
-        val counts = mutableMapOf<String, Int>()
-        for (i in 0..6) {
-            counts[DateUtils.addDays(weekStart, i)] = if (i % 2 == 0) 1 else 0
+        val counts = buildMap<String, Int> {
+            for (i in 0..6) {
+                put(DateUtils.addDays(weekStart, i), if (i % 2 == 0) 1 else 0)
+            }
         }
         HabitCardWeek(
             habit = Habit(

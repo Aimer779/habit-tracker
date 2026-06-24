@@ -170,13 +170,14 @@ fun HabitCardMonthPreview() {
         val year = DateUtils.currentYear()
         val month = DateUtils.currentMonth()
         val days = DateUtils.daysInMonth(year, month)
-        val counts = mutableMapOf<String, Int>()
-        for (day in 1..days) {
-            // Spread a mix of empty / partial / complete across the month
-            counts[DateUtils.dateOfMonth(year, month, day)] = when (day % 5) {
-                0 -> 1
-                1, 2 -> 0
-                else -> 1
+        val counts = buildMap<String, Int> {
+            for (day in 1..days) {
+                // Spread a mix of empty / partial / complete across the month
+                put(DateUtils.dateOfMonth(year, month, day), when (day % 5) {
+                    0 -> 1
+                    1, 2 -> 0
+                    else -> 1
+                })
             }
         }
         HabitCardMonth(
